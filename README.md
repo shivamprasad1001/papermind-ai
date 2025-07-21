@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://via.placeholder.com/600x150?text=PaperMind+AI+%7C+PDF+Chat+Assistant" alt="PaperMind AI" />
+  <img src="assets/logo.png" alt="PaperMind AI" />
 </p>
 <p align= 'center'>
   
