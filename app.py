@@ -52,11 +52,7 @@ async def chat_api(payload: dict):
     try:
         question = payload.get("question")
         answer, sources = get_chat_response(question)
-        print(f'''
-        Answer: {answer}
-        \n ------------------------------------ \n
-        Sources: {sources}
-        ''')
+        
         return {"response": answer, "sources": sources}
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
