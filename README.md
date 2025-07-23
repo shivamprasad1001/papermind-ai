@@ -1,4 +1,11 @@
+</p>
+<h2 align="center">PaperMind AI</h2>
 
+<p align="center">
+An intelligent local-first PDF assistant that leverages Retrieval-Augmented Generation (RAG), LangChain, and powerful open-source language models to allow natural language interaction with documents — securely and offline.
+</p>
+
+---
 <p align="center">
   <img src="assets/PapermindAI_logo.png" alt="PaperMind AI" />
 </p>
@@ -13,12 +20,7 @@
 <img src="https://img.shields.io/badge/License-MIT-informational?style=for-the-badge" />
 <img src="https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python" />
 
-</p>
-<h2 align="center">PaperMind AI</h2>
 
-<p align="center">
-An intelligent local-first PDF assistant that leverages Retrieval-Augmented Generation (RAG), LangChain, and powerful open-source language models to allow natural language interaction with documents — securely and offline.
-</p>
 
 ---
 
