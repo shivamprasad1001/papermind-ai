@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Chat - ChatGPT Style Interface</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <button class="new-chat-btn" onclick="app.newChat()">
+                    <span>➕</span>
+                    New chat
+                </button>
+            </div>
+
+            <div class="upload-section-sidebar">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📄</div>
+                    <div class="upload-text">Click or drag PDF here</div>
+                    <input type="file" class="file-input" id="fileInput" accept=".pdf">
+                </div>
+                <div class="file-status" id="fileStatus"></div>
+            </div>
+
+            <div class="chat-list" id="chatList">
+                <!-- Chat history would go here -->
+            </div>
+
+            <div class="sidebar-footer">
+                PDF Chat Assistant
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="chat-header">
+                <h1 class="chat-title">PDF Chat Assistant</h1>
+            </div>
+
+            <div class="chat-container" id="chatContainer">
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-icon">💬</div>
+                    <h2 class="welcome-title">How can I help you today?</h2>
+                    <p class="welcome-subtitle">Upload a PDF document and ask me any questions about its content. I'll analyze the document and provide detailed answers based on the information within.</p>
+                </div>
+
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Messages will be added here -->
+                </div>
+            </div>
+
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea 
+                        class="input-box" 
+                        id="messageInput" 
+                        placeholder="Upload a PDF to start asking questions..."
+                        rows="1"
+                        disabled
+                    ></textarea>
+                    <button class="send-button" id="sendButton" disabled>
+                        <span>➤</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/index.js"></script>
+</body>
+</html>
