@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="assets/paperai.png" alt="PaperMind AI" />
+  <img src="assets/PapermindAI_logo.png" alt="PaperMind AI" />
 </p>
 <p align= 'center'>
   
