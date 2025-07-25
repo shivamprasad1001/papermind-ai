@@ -110,7 +110,7 @@ uvicorn app:app --reload
 
 ### 🛠️ Models Used
 
-* [TinyLLaMA-1.1B-Chat-v1.0](https://huggingface.co/cognitivecomputations/TinyLlama-1.1B-Chat-v1.0)
+* [TinyLLaMA-1.1B-Chat-v1.0](https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0/tree/main)
 * [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
 
 These models are downloaded and loaded locally, ensuring full privacy and speed.
