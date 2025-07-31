@@ -543,33 +543,6 @@ body {
     font-style: italic;
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-    .sidebar {
-        display: none;
-    }
-
-    .app-container {
-        flex-direction: column;
-    }
-
-    .main-content {
-        height: 100vh;
-    }
-
-    .input-box {
-        font-size: 16px;
-        /* Prevents zoom on iOS */
-    }
-
-    .message-content {
-        max-width: 85%;
-    }
-
-    .welcome-title {
-        font-size: 24px;
-    }
-}
 
 /* Scrollbar Styling */
 .chat-container::-webkit-scrollbar,
@@ -655,4 +628,36 @@ body {
     background: rgba(255, 59, 48, 0.6);
     box-shadow: 2px 2px 9px rgba(249, 21, 9, 0.6);
 
+}
+
+
+/* ================ */
+    
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+
+    .app-container {
+        flex-direction: column;
+    }
+
+    .main-content {
+        height: 100vh;
+    }
+
+    .input-box {
+        font-size: 16px;
+        /* Prevents zoom on iOS */
+    }
+
+    .message-content {
+        max-width: 85%;
+    }
+
+    .welcome-title {
+        font-size: 24px;
+    }
 }
