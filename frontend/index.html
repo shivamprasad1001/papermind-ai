@@ -1,17 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PaperMind AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <link rel="stylesheet" href="/static/styles.css">
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Mobile Header */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            z-index: 1000;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #374151;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        /* Nav Overlay */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        /* Show mobile header only on phones */
+        @media (max-width: 768px) {
+            .mobile-header {
+                display: flex;
+            }
+
+            /* Hide desktop header on mobile */
+            .chat-header {
+                display: none;
+            }
+
+            /* Sidebar mobile styles */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 260px;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            /* Adjust main content for mobile */
+            .main-content {
+                padding-top: 60px;
+            }
+        }
+    </style>
 </head>
+
 <body>
     <div class="app-container">
+        <div class="mobile-header">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h1 class="mobile-logo">PaperMind AI</h1>
+        </div>
+        <div class="nav-overlay" id="navOverlay"></div>
+
         <!-- Sidebar -->
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <button class="new-chat-btn" onclick="app.newChat()">
                     <span>➕</span>
@@ -35,19 +121,32 @@
             <div class="sidebar-footer">
                 PDF Chat Assistant
             </div>
+
         </div>
 
+
         <!-- Main Content -->
+        <div class="pdf-preview-container" id="pdf-preview-container">
+            <!-- <h3 style="text-align: center; bottom: 20px;">📄 PDF Preview</h3> -->
+            <iframe id="pdf-preview" style="
+                        width: 90%;
+                        padding: 20px;  
+                        margin: 20px;
+                        height: 90%;
+                        border: none;
+                     "></iframe>
+        </div>
         <div class="main-content">
             <div class="chat-header">
-                <h1 class="chat-title">PDF Chat Assistant</h1>
+                <h1 class="chat-title">PaperMind AI</h1>
             </div>
 
             <div class="chat-container" id="chatContainer">
                 <div class="welcome-screen" id="welcomeScreen">
                     <div class="welcome-icon">💬</div>
                     <h2 class="welcome-title">How can I help you today?</h2>
-                    <p class="welcome-subtitle">Upload a PDF document and ask me any questions about its content. I'll analyze the document and provide detailed answers based on the information within.</p>
+                    <p class="welcome-subtitle">Upload a PDF document and ask me any questions about its content. I'll
+                        analyze the document and provide detailed answers based on the information within.</p>
                 </div>
 
                 <div class="messages-container" id="messagesContainer">
@@ -57,13 +156,8 @@
 
             <div class="input-container">
                 <div class="input-wrapper">
-                    <textarea 
-                        class="input-box" 
-                        id="messageInput" 
-                        placeholder="Upload a PDF to start asking questions..."
-                        rows="1"
-                        disabled
-                    ></textarea>
+                    <textarea class="input-box" id="messageInput"
+                        placeholder="Upload a PDF to start asking questions..." rows="1" disabled></textarea>
                     <button class="send-button" id="sendButton" disabled>
                         <span>➤</span>
                     </button>
@@ -73,5 +167,7 @@
     </div>
 
     <script src="/static/index.js"></script>
+
 </body>
+
 </html>
