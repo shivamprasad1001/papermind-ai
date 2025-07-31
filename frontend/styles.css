@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -28,6 +27,107 @@ body {
     ;
 }
 
+/* Right arrow icon when collapsed */
+.sidebar:before {
+    font-family: "Font Awesome 5 Free";
+    /* Or appropriate font-family for your Font Awesome version */
+    font-weight: 900;
+    content: "\f054";
+    position: absolute;
+    left: 260px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #c4c4c4;
+    width: 2px;
+    /* width: 20px;  */
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+    font-size: 12px;
+    z-index: 10;
+    color: #c4c4c4;
+    font-size: 30px;
+    padding: 2px;
+    /* padding: 10px; */
+    overflow: hidden;
+    transition: 0.3s ease-in-out;
+    animation: float 3s ease-in-out infinite;
+
+}
+
+.sidebar:hover:before {
+    width: 20px;
+    padding: 10px;
+    color: #000000;
+    background: #e8e8e8;
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.168);
+}
+
+.sidebar:before {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(-50%);
+    }
+
+    50% {
+        transform: translateY(-60%);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: translateY(-50%) scale(1);
+    }
+
+    50% {
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    100% {
+        transform: translateY(-50%) scale(1);
+    }
+}
+
+/* Left arrow icon when expanded */
+.sidebar:after {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f060";
+    position: relative;
+    /* right: 215px; */
+    bottom: 50%;
+    transform: translateY(-50%);
+    background: #f90a0a;
+    width: 200px;
+    height: 200px;
+    display: none;
+    /* Initially hidden */
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid #000000;
+    cursor: pointer;
+    font-size: 12px;
+    z-index: 10;
+}
+
+/* Show left arrow when sidebar is expanded */
+.sidebar.expanded:before {
+    display: none;
+}
+
+.sidebar.expanded:after {
+    display: flex;
+}
+
 .sidebar-header {
     padding: 20px 12px;
     border-bottom: 1px solid #bcbcbc;
@@ -49,7 +149,8 @@ body {
 }
 
 .new-chat-btn:hover {
-    background: #cccccc;
+    background: #0a9541;
+    box-shadow:2px 2px 10px #59a622;
 }
 
 .upload-section-sidebar {
@@ -70,18 +171,21 @@ body {
 
 .upload-area:hover {
     border-color: #10a37f;
-    background: #c4c4c4;
+    background: #12ae51;
+    box-shadow:2px 2px 10px #59a622;
 }
 
 .upload-area.dragover {
     border-color: #10a37f;
-    background: #0d2818;
+    background: #10a37f;
+    box-shadow:2px 2px 10px #0deeb6;
 }
 
 .upload-text {
     font-size: 13px;
     color: #000000;
     margin-top: 8px;
+    font-weight: bold;
 }
 
 .upload-icon {
@@ -122,6 +226,14 @@ body {
     text-align: center;
 }
 
+/* open pdf preview panal */
+.openpdfcontainer {
+    position: fixed;
+    top: 0;
+    background-color: #10a37f;
+    padding: 20px;
+}
+
 /* Main Content */
 .main-content {
     flex: 1;
@@ -150,6 +262,35 @@ body {
     overflow-y: auto;
     background: white;
 }
+
+/* PDF Preview Sidebar Style */
+/* .pdf-preview-container {
+    background-color: #f7f7f7c9;
+    width: 0%;
+    position: relative;
+    display: block;
+    border-left:1px solid #000000;
+
+
+} */
+/* PDF Preview Sidebar Style */
+.pdf-preview-container {
+    background-color: #f7f7f7c9;
+    width: 0%;
+    position: relative;
+    display: none;
+    /* Start with display none */
+    border-left: 1px solid #000000;
+    transition: width 0.3s ease-in-out;
+    /* Add transition for smooth animation */
+    overflow: hidden;
+    /* Prevent content from overflowing during animation */
+    height: 100%;
+    /* Ensure full height */
+}
+
+
+
 
 .welcome-screen {
     display: flex;
@@ -211,7 +352,7 @@ body {
     flex-shrink: 0;
     background: #e5e7eb;
     color: #374151;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
     margin-top: 2px;
 }
 
@@ -273,9 +414,10 @@ body {
     line-height: 1.5;
     transition: all 0.2s;
 }
+
 .input-box::-webkit-scrollbar {
     display: none;
-  }
+}
 
 .input-box:focus {
     border-color: #10a37f;
@@ -345,12 +487,27 @@ body {
     animation: typing 1.4s infinite ease-in-out;
 }
 
-.typing-dot:nth-child(1) { animation-delay: -0.32s; }
-.typing-dot:nth-child(2) { animation-delay: -0.16s; }
+.typing-dot:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: -0.16s;
+}
 
 @keyframes typing {
-    0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-    40% { transform: scale(1); opacity: 1; }
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .success-notification {
@@ -374,11 +531,13 @@ body {
     color: #888;
     opacity: 0.85;
 }
+
 .source-item {
     margin: 0 0 2px 0;
     padding: 0;
     line-height: 1.4;
 }
+
 .source-snippet {
     color: #666;
     font-style: italic;
@@ -399,7 +558,8 @@ body {
     }
 
     .input-box {
-        font-size: 16px; /* Prevents zoom on iOS */
+        font-size: 16px;
+        /* Prevents zoom on iOS */
     }
 
     .message-content {
@@ -431,4 +591,68 @@ body {
 .chat-container::-webkit-scrollbar-thumb:hover,
 .chat-list::-webkit-scrollbar-thumb:hover {
     background: #9ca3af;
+}
+
+
+.pdf-notification-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.pdf-notification {
+    position: fixed;
+    background: rgba(255, 255, 255, 0.96);
+    left: 50%;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 12px;
+    padding: 1px 1px;
+    margin: 8px auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.037);
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: all 0.45s cubic-bezier(0.28, 0.72, 0.36, 1);
+    pointer-events: auto;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    max-width: 400px;
+}
+
+.pdf-notification.active {
+    padding: 14px 16px;
+    transform: translateY(5px);
+    opacity: 1;
+}
+
+.pdf-notification.exiting {
+    top: 25px;
+    transform: translateY(25px) scale(0.95);
+    opacity: 0;
+}
+
+@keyframes pdfProgressAnimation {
+    to {
+        transform: scaleX(0);
+    }
+}
+
+.pdf-notification.success {
+    background: rgba(44, 215, 87, 0.6);
+    box-shadow: 2px 2px 9px rgba(44, 215, 87, 0.6);
+}
+
+
+.pdf-notification.warning {
+    background: rgba(255, 149, 0, 0.6);
+    box-shadow: 2px 2px 9px rgba(249, 160, 36, 0.6);
+}
+
+.pdf-notification.error {
+    background: rgba(255, 59, 48, 0.6);
+    box-shadow: 2px 2px 9px rgba(249, 21, 9, 0.6);
+
 }
