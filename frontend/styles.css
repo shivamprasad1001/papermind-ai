@@ -543,7 +543,6 @@ body {
     font-style: italic;
 }
 
-
 /* Scrollbar Styling */
 .chat-container::-webkit-scrollbar,
 .chat-list::-webkit-scrollbar {
@@ -630,10 +629,6 @@ body {
 
 }
 
-
-/* ================ */
-    
-
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .sidebar {
@@ -659,5 +654,8 @@ body {
 
     .welcome-title {
         font-size: 24px;
+    }
+    .chat-header{
+        display: none;
     }
 }
