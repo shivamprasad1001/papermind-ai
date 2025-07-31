@@ -11,6 +11,22 @@ class PDFChatApp {
         };
         this.initializeElements();
         this.bindEvents();
+
+        // for notification =>
+        this.notificationContainer = document.createElement('div');
+        this.notificationContainer.className = 'pdf-notification-container';
+        document.body.appendChild(this.notificationContainer);
+        this.notificationQueue = [];
+        this.isShowing = false;
+
+        this.currentFile = null;
+        this.initSidebarArrow();
+
+        this.phoneHeader()
+
+
+
+
     }
 
     initializeElements() {
@@ -22,16 +38,15 @@ class PDFChatApp {
         this.chatContainer = document.getElementById('chatContainer');
         this.messageInput = document.getElementById('messageInput');
         this.sendButton = document.getElementById('sendButton');
+
     }
 
     bindEvents() {
         this.uploadArea.addEventListener('click', () => this.fileInput.click());
         this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e.target.files[0]));
-
         this.uploadArea.addEventListener('dragover', this.handleDragOver.bind(this));
         this.uploadArea.addEventListener('dragleave', this.handleDragLeave.bind(this));
         this.uploadArea.addEventListener('drop', this.handleDrop.bind(this));
-
         this.sendButton.addEventListener('click', () => this.sendMessage());
         this.messageInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -61,39 +76,82 @@ class PDFChatApp {
             this.handleFileSelect(files[0]);
         }
     }
+    phoneHeader() {
+        document.getElementById('mobileMenuBtn').addEventListener('click', function () {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('navOverlay');
 
-    // async handleFileSelect(file) {
-    //     if (!file || file.type !== 'application/pdf') {
-    //         alert('Please select a valid PDF file.');
-    //         return;
-    //     }
+            sidebar.classList.toggle('active');
+            sidebar.style.display = 'block';    
 
-    //     this.fileName = file.name;
-    //     this.showProcessingState();
+            overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
+        });
 
-    //     try {
-    //         const formData = new FormData();
-    //         formData.append('file', file);
+        // Close sidebar when clicking overlay
+        document.getElementById('navOverlay').addEventListener('click', function () {
+            document.getElementById('sidebar').classList.remove('active');
+            this.style.display = 'none';
+        });
+    }
+    initSidebarArrow() {
+        // We'll use event delegation since we can't directly target :before
+        document.querySelector('.sidebar').addEventListener('click', (e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const arrowClickArea = 30; // pixels from right edge considered arrow click
 
-    //         const response = await fetch("/upload-pdf/", {
-    //             method: "POST",
-    //             body: formData
-    //         });
+            // Check if click was in the arrow area (right side)
+            if (e.clientX > rect.right - arrowClickArea) {
+                if (!this.currentFile) {
+                    // Trigger file input click if no PDF is loaded
+                    document.getElementById('pdf-upload-input').click();
+                } else {
+                    // If PDF already loaded, just reopen sidebar
+                    this.showpdf(this.currentFile);
+                }
+            }
+        });
+        this.updateArrow();
+    }
 
-    //         const result = await response.json();
+    updateArrow() {
+        const arrow = window.getComputedStyle(
+            document.querySelector('.sidebar'), ':before'
+        ).content;
 
-    //         if (response.ok) {
-    //             alert("PDF uploaded and ingested successfully!");
-    //         } else {
-    //             alert("Error: " + result.error || "Unknown error.");
-    //         }
-    //     } catch (error) {
-    //         console.error('PDF processing error:', error);
-    //         alert('Failed to process PDF.');
-    //         this.resetUploadState();
-    //     }
-    // }
+        // Toggle between → and ←
+        const newArrow = this.isSidebarOpen ? '"←"' : '"→"';
+        document.querySelector('.sidebar').style.setProperty('--arrow', newArrow);
+    }
+
+    showpdf(file) {
+        this.currentFile = file;
+
+        if (file && file.type === "application/pdf") {
+            const fileURL = URL.createObjectURL(file);
+            const iframe = document.getElementById("pdf-preview");
+            iframe.src = fileURL;
+
+            const container = document.getElementById("pdf-preview-container");
+            container.style.display = "block";
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.style.display = "block";
+
+            // Trigger the animation by changing width after a small delay
+            setTimeout(() => {
+                container.style.width = "50%";
+                container.style.transition = "width 0.5s ease-in-out"; // Add transition
+            }, 10);
+
+        } else {
+            alert("Please select a valid PDF file.");
+        }
+        this.updateArrow();
+
+
+    }
+
     async handleFileSelect(file) {
+        this.currentFile = file;
         if (!file || file.type !== 'application/pdf') {
             this.showNotification('Please select a valid PDF file.', 'error');
             return;
@@ -114,7 +172,7 @@ class PDFChatApp {
 
             const result = await response.json();
             console.log(result);
-            
+
             if (response.ok && result.status === "success") {
                 this.showPDFLoaded();
                 this.enableChat();
@@ -132,6 +190,7 @@ class PDFChatApp {
     }
 
 
+
     showProcessingState() {
         this.fileStatus.className = 'file-status processing';
         this.fileStatus.textContent = '⏳ Processing PDF...';
@@ -145,6 +204,17 @@ class PDFChatApp {
     resetUploadState() {
         this.fileStatus.className = 'file-status';
         this.fileStatus.textContent = '';
+    }
+    resetshowpdf() {
+        // Reset PDF state
+        this.currentFile = null;
+
+        // Clear PDF preview
+        const iframe = document.getElementById("pdf-preview");
+        iframe.src = "";
+
+        document.getElementById("pdf-preview-container").style.display = "none";
+
     }
 
     enableChat() {
@@ -225,12 +295,13 @@ class PDFChatApp {
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
         if (isLoading) {
-            contentDiv.innerHTML = `<div class="typing-indicator"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
+            contentDiv.innerHTML = `Thinking <div class="typing-indicator"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
         } else if (typewriterText) {
             // Typewriter effect for AI
             this.typeWriterEffect(contentDiv, typewriterText, sources);
         } else {
             contentDiv.innerHTML = content;
+            // show the sources if available
             if (sources && Array.isArray(sources) && sources.length > 0) {
                 let html = `<ul class='sources-list'>`;
                 sources.forEach(src => {
@@ -264,20 +335,58 @@ class PDFChatApp {
             }
         }
     }
+    // notification function
 
-    showNotification(message, type = 'success') {
-        let notification = document.createElement('div');
-        notification.className = `success-notification ${type}`;
-        notification.textContent = message;
-        document.body.appendChild(notification);
+    // showNotification(message, type = 'success') {
+    //     let notification = document.createElement('div');
+    //     notification.className = `success-notification ${type}`;
+    //     notification.textContent = message;
+    //     document.body.appendChild(notification);
+
+    // }
+
+
+    showNotification(message, type = 'success', duration = 3000) {
+        const notification = document.createElement('div');
+        notification.className = `pdf-notification ${type}`;
+        notification.innerHTML = `
+      <div class="pdf-notification-progress">
+        <div class="pdf-notification-progress-bar" style="animation-duration: ${duration}ms"></div>
+      </div>
+      <div>${message}</div>
+    `;
+
+        this.notificationContainer.appendChild(notification);
+        this.notificationQueue.push(notification);
+
+        // Trigger animation
         setTimeout(() => {
-            notification.style.opacity = 1;
+            notification.classList.add('active');
         }, 10);
+
+        // Auto-dismiss
         setTimeout(() => {
-            notification.style.opacity = 0;
-            setTimeout(() => notification.remove(), 500);
-        }, 2500);
+            this.dismissNotification(notification);
+        }, duration);
+
+        // Click to dismiss
+        notification.addEventListener('click', () => {
+            this.dismissNotification(notification);
+        });
     }
+
+    dismissNotification(notification) {
+        if (!notification) return;
+
+        notification.classList.remove('active');
+        notification.classList.add('exiting');
+
+        setTimeout(() => {
+            notification.remove();
+            this.notificationQueue = this.notificationQueue.filter(n => n !== notification);
+        }, 450);
+    }
+    // end of notification function
 
     autoResizeTextarea() {
         const textarea = this.messageInput;
@@ -286,6 +395,7 @@ class PDFChatApp {
     }
 
     newChat() {
+        this.showNotification('new chat')
         this.pdfText = '';
         this.fileName = '';
         this.conversationHistory = [];
@@ -299,9 +409,12 @@ class PDFChatApp {
         this.sendButton.disabled = true;
         this.messageInput.placeholder = 'Upload a PDF to start...';
         this.messageInput.value = '';
-
+        this.resetshowpdf()
         this.resetUploadState();
     }
 }
 
 const app = new PDFChatApp();
+
+
+
