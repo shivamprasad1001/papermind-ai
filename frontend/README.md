@@ -12,3 +12,11 @@ The **frontend** of **PaperMind AI** offers a clean, responsive interface for in
 - 🔔 User-friendly alerts and error handling
 
 ---
+
+## 🗂️ Folder Structure
+
+```bash
+frontend/
+├── index.html     # Main HTML layout
+├── style.css      # Modern, responsive CSS styles
+└── index.js       # JavaScript for chat & file upload functionality
