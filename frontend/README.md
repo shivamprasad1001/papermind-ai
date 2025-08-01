@@ -20,3 +20,19 @@ frontend/
 ├── index.html     # Main HTML layout
 ├── style.css      # Modern, responsive CSS styles
 └── index.js       # JavaScript for chat & file upload functionality
+
+---
+
+🧩 File Overview
+
+index.html
+
+Serves as the main container for the user interface.
+
+Includes:
+
+Drag-and-drop file upload
+
+Chat interface section
+
+Response display area
