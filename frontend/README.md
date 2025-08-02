@@ -123,8 +123,8 @@ Works with any RESTful backend (FastAPI, Express, etc.)
 
 This frontend works in tandem with the PaperMind AI backend powered by:
 
-🤖 TinyLLaMA or Gemini Pro
+🤖 Gemini Pro
 
-🧬 Sentence Transformers / Nomic Embedding
+🧬 Sentence Transformers
 
 
