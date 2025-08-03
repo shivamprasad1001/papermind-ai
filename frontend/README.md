@@ -24,7 +24,41 @@ frontend/
 ```
 ---
 
-🧩 
+🧩 ## File Overview
+
+### index.html
+
+Serves as the main container for the user interface.
+
+**Includes:**
+- Drag-and-drop file upload
+- Chat interface section
+- Response display area
+- Links to style.css and index.js.
+
+---
+
+### style.css
+
+Defines visual styles for the app:
+
+- Clean white/dark theme
+- Animated transitions
+- Responsive mobile layout
+
+Modern UI inspired by productivity tools.
+
+---
+
+### index.js
+
+Handles:
+
+- PDF file selection & upload
+- Sending user queries to backend (/chat API)
+- Rendering AI responses in the chat interface
+
+Includes error messages and loading indicators for better UX.
 ---
 
 🔧 Setup Instructions
