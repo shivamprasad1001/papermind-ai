@@ -81,10 +81,10 @@ Includes error messages and loading indicators for better UX.
 1. Open the Interface
 
 You can launch the frontend locally by simply opening index.html in any modern browser:
-
+```base
 cd frontend/
 open index.html
-
+```
 Or host via any static server:
 
 npx serve .
