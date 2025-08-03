@@ -24,7 +24,7 @@ frontend/
 ```
 ---
 
-🧩 ## File Overview
+## File Overview
 
 ### index.html
 
