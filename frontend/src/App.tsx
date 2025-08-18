@@ -1,5 +1,3 @@
-
-import React from 'react';
 import { AppProvider } from './context/AppContext';
 import Layout from './components/Layout';
 import ToastContainer from './components/common/ToastContainer';
