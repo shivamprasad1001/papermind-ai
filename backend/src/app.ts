@@ -35,8 +35,7 @@ app.use(cors({
     if (
       !origin ||
       origin.startsWith('http://localhost') ||
-      origin.startsWith('http://127.0.0.1') ||
-      origin.startsWith('http://192.168.26.252')
+      origin.startsWith('http://127.0.0.1') 
     ) {
       return callback(null, true);
     }
@@ -64,7 +63,9 @@ app.use('/api', apiRoutes);
 app.get('/status', (_req, res) => {
   res.status(200).send('Backend is running');
 });
-
+app.get("/api/hello", (req, res) => {
+  res.json({ msg: "Hello from Express on Vercel!" });
+});
 app.listen(3001, () => {
     console.log('Server running on http://localhost:3001');
 });
