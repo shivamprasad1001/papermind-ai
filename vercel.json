@@ -16,11 +16,11 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/backend/api/index.ts" 
+      "dest": "/backend/api/index.ts"
     },
     {
       "src": "/(.*)",
-      "dest": "/frontend/$1" 
+      "dest": "/frontend/$1"
     }
   ]
 }
