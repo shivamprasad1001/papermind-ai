@@ -1,3 +1,4 @@
+import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useChat } from '../../hooks/useChat';
 import { ACCEPTED_FILE_TYPES } from '../../constants';

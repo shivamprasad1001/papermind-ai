@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Sidebar from './sidebar/Sidebar';
 import ChatPanel from './chat/ChatPanel';
 import DocumentPreviewPanel from './chat/DocumentPreviewPanel';
