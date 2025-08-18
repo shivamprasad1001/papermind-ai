@@ -79,7 +79,7 @@ importers:
   frontend:
     dependencies:
       axios:
-        specifier: ^1.7.2
+        specifier: ^1.11.0
         version: 1.11.0
       lucide-react:
         specifier: ^0.539.0
