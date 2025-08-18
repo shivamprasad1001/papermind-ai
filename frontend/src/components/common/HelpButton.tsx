@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { HelpCircleIcon, XIcon } from './icons';
 
 const HelpButton = () => {

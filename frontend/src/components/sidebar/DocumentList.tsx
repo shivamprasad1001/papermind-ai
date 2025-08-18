@@ -1,4 +1,3 @@
-import React from 'react';
 import { useChat } from '../../hooks/useChat';
 import { FileTextIcon, EyeIcon } from '../common/icons';
 import type { Document } from '../../types';

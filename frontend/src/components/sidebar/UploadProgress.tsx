@@ -1,4 +1,3 @@
-import React from 'react';
 import { UploadProgress } from '../../types';
 import { CheckCircleIcon, XCircleIcon, LoaderIcon } from '../common/icons';
 

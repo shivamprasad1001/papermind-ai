@@ -1,5 +1,3 @@
-
-import React, { useEffect, useState } from 'react';
 import type { Toast as ToastType } from '../../types';
 import { useAppContext } from '../../context/AppContext';
 import { CheckCircleIcon, XCircleIcon, InfoIcon, XIcon } from './icons';
