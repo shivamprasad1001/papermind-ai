@@ -5,10 +5,10 @@ import path from 'path';
 import { version } from '../../package.json'; 
 
 // =============================================
-// TODO: REPLACE THESE VALUES WITH YOUR REAL DATA
+// TODO: REPLACE THESE VALUES WITH  REAL DATA
 // =============================================
 const API_INFO = {
-  title: 'PaperMind API', // TODO: Change to your API name
+  title: 'PaperMind API', 
   description: `
 ## API Overview
 TODO: Write a detailed description of your API here.
@@ -64,7 +64,7 @@ const options: swaggerJsdoc.Options = {
     components: {
       securitySchemes: SECURITY_SCHEMES,
       schemas: {
-        // TODO: Add your common request/response schemas here
+        // TODO: Add  common request/response schemas here
         ErrorResponse: {
           type: 'object',
           properties: {
@@ -105,8 +105,8 @@ export const setupSwagger = (app: Express) => {
   // Custom Swagger UI configuration
   const swaggerUiOptions = {
     customSiteTitle: `${API_INFO.title} Documentation`, // TODO: Customize
-    customCss: '.swagger-ui .topbar { display: none }', // TODO: Add your branding
-    customfavIcon: '/assets/favicon.ico' // TODO: Change to your favicon
+    customCss: '.swagger-ui .topbar { display: none }', // TODO: Add  branding
+    customfavIcon: '/assets/favicon.ico' // TODO: Change to  favicon
   };
 
   app.use('/api-docs', 
