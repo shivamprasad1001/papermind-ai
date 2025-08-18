@@ -1,10 +1,8 @@
-// src/config/swagger.ts
-
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { Express } from 'express';
 import path from 'path';
-import { version } from '../../package.json'; // Auto-import API version
+import { version } from '../../package.json'; 
 
 // =============================================
 // TODO: REPLACE THESE VALUES WITH YOUR REAL DATA
