@@ -10,27 +10,22 @@ import { version } from '../../package.json'; // Auto-import API version
 // TODO: REPLACE THESE VALUES WITH YOUR REAL DATA
 // =============================================
 const API_INFO = {
-  title: 'PDF Chat API', // TODO: Change to your API name
+  title: 'PaperMind API', // TODO: Change to your API name
   description: `
 ## API Overview
 TODO: Write a detailed description of your API here.
-
-## Authentication
-\`\`\`
-Bearer Token: xxxxxx.xxxxxx.xxxxxx
-\`\`\`
 
 ## Rate Limits
 - 100 requests/15 minutes per IP
   `, // TODO: Add Markdown-formatted documentation
   contact: {
-    name: 'API Support', // TODO: Change to your team name
-    email: 'support@yourdomain.com', // TODO: Change to your support email
-    url: 'https://yourdomain.com/support' // TODO: Change to your support URL
+    name: 'PaperMind AI', 
+    email: 'shivamprasad1001@gmail.com',
+    url: 'https://papermind-chat.vercel.app' 
   },
   license: {
-    name: 'Proprietary', // TODO: Change to 'MIT', 'Apache 2.0', etc.
-    url: 'https://yourdomain.com/license' // TODO: Change to your license URL
+    name: 'MIT', 
+    url: 'https://github.com/shivamprasad1001/papermind-ai/blob/main/LICENSE' 
   }
 };
 
