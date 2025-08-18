@@ -21,7 +21,7 @@ export const readChatDatabase = async (): Promise<Record<string, Conversation>> 
     try {
         const fileContent = await fs.readFile(dbPath, 'utf-8');
         return JSON.parse(fileContent);
-    } catch (error) {
+    } catch (error: any) {
         // If the file doesn't exist, return an empty object
         if (error.code === 'ENOENT') {
             return {};
