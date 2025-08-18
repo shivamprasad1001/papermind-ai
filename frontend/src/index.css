@@ -1,0 +1,162 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Theme CSS Variables */
+:root {
+  --bg-primary: #121212;
+  --bg-surface: #1E1E1E;
+  --bg-border: #2D2D2D;
+  --text-primary: #FFFFFF;
+  --text-secondary: #CCCCCC;
+  --bg-sidebar: #1E1E1E;
+  --bg-header: #2D2D2D;
+  --bg-input: #2D2D2D;
+  --bg-button: #3B82F6;
+  --bg-button-hover: #2563EB;
+  --border-input: #444444;
+  --border-button: #3B82F6;
+  --aiMessage : #1E1E1E;
+  --aiMessage-border : #2D2D2D;
+}
+
+/* Dark Theme (Default) */
+.theme-dark {
+  --bg-primary: #121212;
+  --bg-surface: #1E1E1E;
+  --bg-border: #2D2D2D;
+  --text-primary: #FFFFFF;
+  --text-secondary: #CCCCCC;
+  --bg-sidebar: #1E1E1E;
+  --bg-header: #2D2D2D;
+  --bg-input: #2D2D2D;
+  --bg-button: #3B82F6;
+  --bg-button-hover: #2563EB;
+  --border-input: #444444;
+  --border-button: #3B82F6;
+  --aiMessage : #1E1E1E;
+  --aiMessage-border : #2D2D2D;
+  --userMessage : #308de9;
+  --userMessage-border : #1c80e5;
+}
+
+/* Light Theme */
+.theme-light {
+  --bg-primary: #F8F9FA;
+  --bg-surface: #dddfe0;
+  --bg-border: #E9ECEF;
+  --text-primary: #212529;
+  --text-secondary: #6C757D;
+  --bg-sidebar: #F8F9FA;
+  --bg-header: #FFFFFF;
+  --bg-input: #FFFFFF;
+  --bg-button: #0D6EFD;
+  --bg-button-hover: #0B5ED7;
+  --border-input: #CED4DA;
+  --border-button: #0D6EFD;
+  --aiMessage : #fff;
+  --aiMessage-border : #E9ECEF;
+  --userMessage : #FFFFFF;
+  --userMessage-border : #FFFFFF;
+}
+
+/* Blue Theme */
+.theme-blue {
+  --bg-primary: #18202d;
+  --bg-surface: #1E293B;
+  --bg-border: #334155;
+  --text-primary: #F1F5F9;
+  --text-secondary: #CBD5E1;
+  --bg-sidebar: #1E293B;
+  --bg-header: #334155;
+  --bg-input: #334155;
+  --bg-button: #3B82F6;
+  --bg-button-hover: #2563EB;
+  --border-input: #475569;
+  --border-button: #3B82F6;
+  --aiMessage : #1E293B;
+  --aiMessage-border : #334155;
+  --userMessage : #334155;
+  --userMessage-border : #1E293B;
+}
+
+/* Green Theme */
+.theme-green {
+  --bg-primary: #064E3B;
+  --bg-surface: #065F46;
+  --bg-border: #047857;
+  --text-primary: #ECFDF5;
+  --text-secondary: #D1FAE5;
+  --bg-sidebar: #065F46;
+  --bg-header: #047857;
+  --bg-input: #047857;
+  --bg-button: #10B981;
+  --bg-button-hover: #059669;
+  --border-input: #059669;
+  --border-button: #10B981;
+  --aiMessage : #065F46;
+  --aiMessage-border : #047857;
+  --userMessage : #047857 ;
+  --userMessage-border : #35937a;
+}
+
+/* Purple Theme */
+.theme-purple {
+  --bg-primary: #1E1B4B;
+  --bg-surface: #312E81;
+  --bg-border: #4338CA;
+  --text-primary: #F3F4F6;
+  --text-secondary: #E0E7FF;
+  --bg-sidebar: #312E81;
+  --bg-header: #4338CA;
+  --bg-input: #4338CA;
+  --bg-button: #8B5CF6;
+  --bg-button-hover: #7C3AED;
+  --border-input: #6366F1;
+  --border-button: #8B5CF6;
+  --aiMessage : #312E81;
+  --aiMessage-border : #4338CA;
+}
+
+/* Orange Theme */
+.theme-orange {
+  --bg-primary: #451A03;
+  --bg-surface: #7C2D12;
+  --bg-border: #EA580C;
+  --text-primary: #FFF7ED;
+  --text-secondary: #FED7AA;
+  --bg-sidebar: #7C2D12;
+  --bg-header: #EA580C;
+  --bg-input: #EA580C;
+  --bg-button: #F97316;
+  --bg-button-hover: #EA580C;
+  --border-input: #FB923C;
+  --border-button: #F97316;
+  --aiMessage : #7C2D12;
+  --aiMessage-border : #EA580C;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Smooth theme transitions */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}

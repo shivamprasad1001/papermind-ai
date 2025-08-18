@@ -1,0 +1,30 @@
+{
+  "name": "papermind-ai-v2",
+  "version": "2.1.0",
+  "private": true,
+  "description": "PaperMind AI v2 - A PDF document chat application with AI-powered insights",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "setup": "node setup.js",
+    "dev": "concurrently \"pnpm --filter=backend dev\" \"pnpm --filter=frontend dev\"",
+    "dev:frontend": "pnpm --filter=frontend dev",
+    "dev:backend": "pnpm --filter=backend dev",
+    "build": "pnpm --filter=frontend build && pnpm --filter=backend build",
+    "build:frontend": "pnpm --filter=frontend build",
+    "build:backend": "pnpm --filter=backend build",
+    "start": "pnpm --filter=backend start",
+    "install:all": "pnpm install",
+    "clean": "pnpm -r exec rm -rf node_modules && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "packageManager": "pnpm@9.1.1",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=9.0.0"
+  }
+} 
