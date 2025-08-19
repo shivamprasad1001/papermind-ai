@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response, NextFunction } from 'express';
 import * as express from 'express';
 import { parsePdf, chunkText } from '../services/pdfService';
 import { embedChunks, getEmbeddings } from '../services/geminiService';
@@ -270,8 +270,7 @@ export const uploadAndProcessPdf = async (req: Request, res: Response, next: Nex
 
 
 export const chatWithDocument = async (req: Request, res: Response, next: NextFunction) => {
-    
-    
+        
     const { message, documentId, userType = 'general' } = req.body;
 
     if (!message || !documentId) {
