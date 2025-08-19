@@ -9,7 +9,18 @@ import { addMessageToHistory, getHistory } from '../services/chatHistoryService'
 import { randomUUID } from 'crypto'; // Built-in Node.js module for unique IDs
 import { readChatDatabase, writeChatDatabase, ChatMessage } from '../utils/db'; // Import our new DB functions
 
+type MulterRequest = Request & {
+  file?: Express.Multer.File;
+  files?: Express.Multer.File[];
+  body: any;
+};
 
+type ExpressResponse = Response & {
+  setHeader: any;
+  flushHeaders?: () => void;
+  write?: (chunk: any) => void;
+  end?: () => void;
+};
 // Initialize Pinecone client at startup
 let pineconeClient: any;
 (async () => {
@@ -22,11 +33,9 @@ let pineconeClient: any;
     }
 })();
 
-interface RequestWithFile extends express.Request {
-    file?: Express.Multer.File;
-}
 
-export const uploadAndProcessPdf = async (req: Request, res: Response, next: NextFunction) => {
+
+export const uploadAndProcessPdf = async (req: MulterRequest, res: ExpressResponse, next: NextFunction) => {
     if (!req.file) {
         return res.status(400).json({ message: 'No file uploaded.' });
     }
