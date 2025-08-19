@@ -1,6 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import helmet from 'helmet';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import pinoHttp from 'pino-http';
@@ -15,7 +14,7 @@ const app = express();
 app.set('trust proxy', true);
 
 // Security, compression, logging
-app.use(helmet());
+
 app.use(compression());
 app.use(pinoHttp());
 
@@ -47,6 +46,9 @@ app.use(limiter);
 app.use('/api', apiRoutes);
 
 // Health + readiness
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok" });
+});
 app.get('/status', (_req: Request, res: Response) => res.status(200).send('ok'));
 app.get('/ready', (_req: Request, res: Response) => res.status(200).json({ ready: true }));
 
