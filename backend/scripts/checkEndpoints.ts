@@ -14,9 +14,9 @@ const endpoints = [
   for (const ep of endpoints) {
     try {
       const res = await axios({ method: ep.method as any, url: baseURL + ep.url, data: ep.data });
-      console.log(`✅ ${ep.method.toUpperCase()} ${ep.url} → ${res.status}`);
+      console.log(` ${ep.method.toUpperCase()} ${ep.url} → ${res.status}`);
     } catch (err: any) {
-      console.log(`❌ ${ep.method.toUpperCase()} ${ep.url} → ${err.response?.status || err.message}`);
+      console.log(` ${ep.method.toUpperCase()} ${ep.url} → ${err.response?.status || err.message}`);
     }
   }
 })();

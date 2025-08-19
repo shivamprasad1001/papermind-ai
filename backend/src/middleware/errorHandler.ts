@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-export const errorHandler = (err: any, _req: Request, res: Response, _next: NextFunction) => {
+export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
   const status = err.status || err.statusCode || 500;
   const code = err.code || 'INTERNAL_ERROR';
   const message = err.message || 'Something went wrong';
