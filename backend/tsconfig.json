@@ -4,6 +4,7 @@
     "module": "commonjs",
     "rootDir": "./src",
     "outDir": "./dist",
+    "types": ["node", "express"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -12,8 +13,9 @@
   },
   "include": [
     "src/**/*",
-     "api/**/*"
-    ],
+    "api/**/*",
+    "src/types/**/*"
+  ],
   "exclude": [
     "node_modules"
   ]

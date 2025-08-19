@@ -1,4 +1,5 @@
-import { Express, Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
+
 import swaggerJsdoc, { Options } from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { ENV } from '../config/env';
