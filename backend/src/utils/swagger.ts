@@ -1,6 +1,7 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { Request, Response, Express } from 'express';
+import { Express } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import { version } from '../../package.json'; 
 
@@ -109,22 +110,19 @@ export const setupSwagger = (app: Express) => {
     customfavIcon: '/assets/favicon.ico' // TODO: Change to  favicon
   };
 
-  // app.use('/api-docs', 
-  //   swaggerUi.serve, 
-  //   swaggerUi.setup(specs, swaggerUiOptions)
-  // );
-  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.use('/api-docs', 
+    swaggerUi.serve, 
+    swaggerUi.setup(specs, swaggerUiOptions)
+  );
+  app.get('/', (req: Request, res: Response, next: NextFunction) => {
+    res.redirect('/api-docs');
+  });
+  // JSON endpoint for programmatic access req: Request, res: Response, next: NextFunction
+  app.get('/api-docs.json', (req: Request, res: Response, next: NextFunction) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(specs);
+  });
 
-  // JSON endpoint for programmatic access
-  // app.get('/api-docs.json', (req, res) => {
-  //   res.setHeader('Content-Type', 'application/json');
-  //   res.send(specs);
-  // });
-  app.get('/docs.json', (req: Request, res: Response) => {
-        res.setHeader('Content-Type', 'application/json');
-        res.send(swaggerSpec);
-    });
-
-  console.log(`📚 API docs available at /api-docs`);
+  console.log(` API docs available at /api-docs`);
 };
 

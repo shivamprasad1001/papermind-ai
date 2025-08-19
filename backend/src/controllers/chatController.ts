@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction } from 'express'
 import * as express from 'express';
 import { parsePdf, chunkText } from '../services/pdfService';
 import { embedChunks, getEmbeddings } from '../services/geminiService';
@@ -7,7 +8,7 @@ import { initPinecone } from '../services/pineconeService';
 import { addMessageToHistory, getHistory } from '../services/chatHistoryService';
 import { randomUUID } from 'crypto'; // Built-in Node.js module for unique IDs
 import { readChatDatabase, writeChatDatabase, ChatMessage } from '../utils/db'; // Import our new DB functions
-import { Request, Response, NextFunction } from 'express';
+
 
 // Initialize Pinecone client at startup
 let pineconeClient: any;
@@ -25,7 +26,7 @@ interface RequestWithFile extends express.Request {
     file?: Express.Multer.File;
 }
 
-export const uploadAndProcessPdf = async (req: RequestWithFile, res: express.Response, next: express.NextFunction) => {
+export const uploadAndProcessPdf = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.file) {
         return res.status(400).json({ message: 'No file uploaded.' });
     }
@@ -66,6 +67,7 @@ export const uploadAndProcessPdf = async (req: RequestWithFile, res: express.Res
 
 
 
+// TODO : this commented code block is send message data in best formate with datatime stamp  
 
 // export const chatWithDocument = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
 //     const { message, documentId, userType = 'general' } = req.body;

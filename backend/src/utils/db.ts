@@ -32,5 +32,6 @@ export const readChatDatabase = async (): Promise<Record<string, Conversation>> 
 
 // Writes the entire chat database to the JSON file
 export const writeChatDatabase = async (data: Record<string, Conversation>): Promise<void> => {
-    await fs.writeFile(dbPath, JSON.stringify(data, null, 2), 'utf-8');
+    // await fs.writeFile(dbPath, JSON.stringify(data, null, 2), 'utf-8');
+    // TODO Update this by using (1. Postgres, 2. Supabase, 3. Neon, 4.Vercel Postgres* ) there is option to use database.
 };
