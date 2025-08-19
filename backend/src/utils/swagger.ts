@@ -1,128 +1,36 @@
-import swaggerJsdoc from 'swagger-jsdoc';
+import { Express, Request, Response, NextFunction } from 'express';
+import swaggerJsdoc, { Options } from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { Express } from 'express';
-import { Request, Response, NextFunction } from 'express';
-import path from 'path';
-import { version } from '../../package.json'; 
-
-// =============================================
-// TODO: REPLACE THESE VALUES WITH  REAL DATA
-// =============================================
-const API_INFO = {
-  title: 'PaperMind API', 
-  description: `
-## API Overview
-TODO: Write a detailed description of your API here.
-
-## Rate Limits
-- 100 requests/15 minutes per IP
-  `, // TODO: Add Markdown-formatted documentation
-  contact: {
-    name: 'PaperMind AI', 
-    email: 'shivamprasad1001@gmail.com',
-    url: 'https://papermind-chat.vercel.app' 
-  },
-  license: {
-    name: 'MIT', 
-    url: 'https://github.com/shivamprasad1001/papermind-ai/blob/main/LICENSE' 
-  }
-};
-
-const SERVERS = [
-  {
-    url: 'https://api.yourdomain.com/v1', // TODO: Change to production URL
-    description: 'Production'
-  },
-  {
-    url: 'http://localhost:3001', 
-    description: 'Local Development'
-  }
-];
-
-const SECURITY_SCHEMES = {
-  BearerAuth: {
-    type: 'http',
-    scheme: 'bearer',
-    bearerFormat: 'JWT',
-    description: 'TODO: Add your JWT description here'
-  }
-};
-// =============================================
-// END OF CONFIGURATION SECTION
-// =============================================
-
-const options: swaggerJsdoc.Options = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: API_INFO.title,
-      version: version,
-      description: API_INFO.description,
-      contact: API_INFO.contact,
-      license: API_INFO.license
-    },
-    servers: SERVERS,
-    components: {
-      securitySchemes: SECURITY_SCHEMES,
-      schemas: {
-        // TODO: Add  common request/response schemas here
-        ErrorResponse: {
-          type: 'object',
-          properties: {
-            error: {
-              type: 'string',
-              example: 'Error message'
-            },
-            code: {
-              type: 'string',
-              example: 'ERR_400'
-            }
-          }
-        },
-        // TODO: Add more shared schemas as needed
-        Pagination: {
-          type: 'object',
-          properties: {
-            total: { type: 'integer' },
-            limit: { type: 'integer' },
-            offset: { type: 'integer' }
-          }
-        }
-      }
-    },
-    // Global security requirement (can be overridden per route)
-    security: [{ BearerAuth: [] }]
-  },
-  apis: [
-    path.join(__dirname, '../routes/*.ts'),
-    path.join(__dirname, '../controllers/*.ts'),
-    path.join(__dirname, '../models/*.ts') // Optional: for model documentation
-  ]
-};
-
-const specs = swaggerJsdoc(options);
+import { ENV } from '../config/env';
 
 export const setupSwagger = (app: Express) => {
-  // Custom Swagger UI configuration
-  const swaggerUiOptions = {
-    customSiteTitle: `${API_INFO.title} Documentation`, // TODO: Customize
-    customCss: '.swagger-ui .topbar { display: none }', // TODO: Add  branding
-    customfavIcon: '/assets/favicon.ico' // TODO: Change to  favicon
+  if (ENV.NODE_ENV === 'production') {
+    // Provide JSON spec in production, but skip UI to save cold-start time
+    const options: Options = {
+      definition: {
+        openapi: '3.0.0',
+        info: { title: 'PaperMind AI API', version: '1.0.0' },
+      },
+      apis: ['src/routes/**/*.ts', 'src/controllers/**/*.ts'],
+    };
+    const specs = swaggerJsdoc(options);
+    app.get('/api-docs.json', (_req: Request, res: Response) => res.json(specs));
+    return;
+  }
+
+  // Full UI in non-production
+  const options: Options = {
+    definition: {
+      openapi: '3.0.0',
+      info: { title: 'PaperMind AI API', version: '1.0.0' },
+    },
+    apis: ['src/routes/**/*.ts', 'src/controllers/**/*.ts'],
   };
-
-  app.use('/api-docs', 
-    swaggerUi.serve, 
-    swaggerUi.setup(specs, swaggerUiOptions)
-  );
-  app.get('/', (req: Request, res: Response, next: NextFunction) => {
-    res.redirect('/api-docs');
-  });
-  // JSON endpoint for programmatic access req: Request, res: Response, next: NextFunction
-  app.get('/api-docs.json', (req: Request, res: Response, next: NextFunction) => {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(specs);
-  });
-
-  console.log(` API docs available at /api-docs`);
+  const specs = swaggerJsdoc(options);
+  const swaggerUiOptions = {
+    explorer: true,
+  } as any;
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, swaggerUiOptions));
+  app.get('/', (_req: Request, res: Response) => res.redirect('/api-docs'));
+  app.get('/api-docs.json', (_req: Request, res: Response) => res.json(specs));
 };
-

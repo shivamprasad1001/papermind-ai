@@ -1,4 +1,3 @@
-
 {
   "compilerOptions": {
     "target": "es2020",
@@ -11,7 +10,10 @@
     "skipLibCheck": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*", "api/**/*"],
+  "include": [
+    "src/**/*",
+     "api/**/*"
+    ],
   "exclude": [
     "node_modules"
   ]
