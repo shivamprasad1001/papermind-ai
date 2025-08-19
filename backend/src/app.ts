@@ -1,10 +1,11 @@
-import express from 'express';
+import express, { Request, Response, NextFunction, Express } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 import apiRoutes from './routes/api';
 import { errorHandler } from './middleware/errorHandler';
 import { setupSwagger } from './utils/swagger';
+
 
 dotenv.config();
 
@@ -24,7 +25,7 @@ const PORT = Number(process.env.PORT) || 3001;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 // Log incoming requests
-app.use((req, _res, next) => {
+app.use((req: Request, _res: Response, next: NextFunction) => {
   console.log(`[${req.method}] ${req.url} from ${req.ip}`);
   next();
 });
@@ -60,10 +61,10 @@ app.use(limiter);
 app.use('/api', apiRoutes);
 
 // Health check endpoint
-app.get('/status', (_req, res) => {
+app.get('/status', (_req: Request, res: Response) => {
   res.status(200).send('Backend is running');
 });
-app.get("/api/hello", (req, res) => {
+app.get("/api/hello", (_req: Request, res: Response) => {
   res.json({ msg: "Hello from Express on Vercel!" });
 });
 app.listen(3001, () => {

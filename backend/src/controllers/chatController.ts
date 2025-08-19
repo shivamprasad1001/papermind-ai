@@ -7,6 +7,7 @@ import { initPinecone } from '../services/pineconeService';
 import { addMessageToHistory, getHistory } from '../services/chatHistoryService';
 import { randomUUID } from 'crypto'; // Built-in Node.js module for unique IDs
 import { readChatDatabase, writeChatDatabase, ChatMessage } from '../utils/db'; // Import our new DB functions
+import { Request, Response, NextFunction } from 'express';
 
 // Initialize Pinecone client at startup
 let pineconeClient: any;
@@ -266,7 +267,7 @@ export const uploadAndProcessPdf = async (req: RequestWithFile, res: express.Res
 //hello
 
 
-export const chatWithDocument = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+export const chatWithDocument = async (req: Request, res: Response, next: NextFunction) => {
     
     
     const { message, documentId, userType = 'general' } = req.body;
