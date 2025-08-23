@@ -1,4 +1,7 @@
-
+html, body {
+  width: 100%;
+  overflow-x: auto; /* or scroll if you prefer */
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
