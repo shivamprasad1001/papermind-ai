@@ -1,6 +1,5 @@
-import { Request, Response } from "express";
-import express from "express"; // <-- import express so we can use Application type
-
+import express from "express";
+import { Application, Request, Response } from 'express';
 import swaggerJsdoc, { Options } from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { ENV } from "../config/env";
