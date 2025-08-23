@@ -75,6 +75,58 @@ export const uploadAndProcessPdf = async (req: MulterRequest, res: ExpressRespon
 };
 
 
+export const chatWithDocument = async (req: Request, res: Response, next: NextFunction) => {
+        
+    const { message, documentId, userType = 'general' } = req.body;
+
+    if (!message || !documentId) {
+        return res.status(400).json({ message: 'Message and documentId are required.' });
+    }
+
+    // Validate user type
+    const validUserTypes = ['student', 'teacher', 'researcher', 'general'];
+    const validatedUserType = validUserTypes.includes(userType) ? userType : 'general';
+
+    try {
+        // 1. Get relevant context from Pinecone
+        const queryEmbedding = await getEmbeddings(message);
+        const contextChunks = await queryPinecone(pineconeClient, queryEmbedding, documentId);
+        const context = contextChunks.map(chunk => chunk.metadata?.text || '').filter(Boolean).join('\n\n');
+        
+        // 2. Get chat history
+        const history = getHistory(documentId);
+
+        // 3. Add user message to history
+        addMessageToHistory(documentId, { role: 'user', parts: [{ text: message }] });
+
+        // 4. Set up headers for streaming
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+        res.flushHeaders();
+
+        // 5. Get streaming response from Gemini
+        const stream = await getChatCompletion(message, context, history, validatedUserType);
+        
+        let fullResponse = '';
+        for await (const chunk of stream) {
+            const textPart = chunk.text;
+            if (textPart) {
+                fullResponse += textPart;
+                res.write(textPart);
+            }
+        }
+
+        // 6. Add AI response to history
+        addMessageToHistory(documentId, { role: 'model', parts: [{ text: fullResponse }] });
+
+        res.end();
+
+    } catch (error) {
+        console.error('Error in chat processing:', error);
+        next(error);
+    }
+};
 
 // TODO : this commented code block is send message data in best formate with datatime stamp  
 
@@ -277,56 +329,3 @@ export const uploadAndProcessPdf = async (req: MulterRequest, res: ExpressRespon
 
 //hello
 
-
-export const chatWithDocument = async (req: Request, res: Response, next: NextFunction) => {
-        
-    const { message, documentId, userType = 'general' } = req.body;
-
-    if (!message || !documentId) {
-        return res.status(400).json({ message: 'Message and documentId are required.' });
-    }
-
-    // Validate user type
-    const validUserTypes = ['student', 'teacher', 'researcher', 'general'];
-    const validatedUserType = validUserTypes.includes(userType) ? userType : 'general';
-
-    try {
-        // 1. Get relevant context from Pinecone
-        const queryEmbedding = await getEmbeddings(message);
-        const contextChunks = await queryPinecone(pineconeClient, queryEmbedding, documentId);
-        const context = contextChunks.map(chunk => chunk.metadata?.text || '').filter(Boolean).join('\n\n');
-        
-        // 2. Get chat history
-        const history = getHistory(documentId);
-
-        // 3. Add user message to history
-        addMessageToHistory(documentId, { role: 'user', parts: [{ text: message }] });
-
-        // 4. Set up headers for streaming
-        res.setHeader('Content-Type', 'text/event-stream');
-        res.setHeader('Cache-Control', 'no-cache');
-        res.setHeader('Connection', 'keep-alive');
-        res.flushHeaders();
-
-        // 5. Get streaming response from Gemini
-        const stream = await getChatCompletion(message, context, history, validatedUserType);
-        
-        let fullResponse = '';
-        for await (const chunk of stream) {
-            const textPart = chunk.text;
-            if (textPart) {
-                fullResponse += textPart;
-                res.write(textPart);
-            }
-        }
-
-        // 6. Add AI response to history
-        addMessageToHistory(documentId, { role: 'model', parts: [{ text: fullResponse }] });
-
-        res.end();
-
-    } catch (error) {
-        console.error('Error in chat processing:', error);
-        next(error);
-    }
-};
