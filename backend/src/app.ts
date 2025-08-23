@@ -1,4 +1,5 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response, NextFunction } from "express";
+
 import cors from 'cors';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
@@ -58,6 +59,9 @@ setupSwagger(app);
 // 404
 app.use((req: Request, res: Response) => {
   res.status(404).json({ error: 'Not found', path: req.path });
+  console.log(req.path);        // should work
+  console.log(req.originalUrl); // alternative
+
 });
 
 // Error handler
