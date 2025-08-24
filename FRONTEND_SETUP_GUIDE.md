@@ -1,177 +1,107 @@
-# 🚀 Frontend Setup Guide - Fix "Network Error"
+# Frontend Setup Guide for Deployed Backend
 
-## 📁 **Project Structure**
-```
-papermind-ai-v2/
-├── backend/          # Backend server (Port 3001)
-├── frontend/         # Frontend app (Port 5173)
-├── .env              # Backend environment variables
-└── package.json      # Root package.json
-```
+## 🎉 Backend Successfully Deployed!
 
-## ❌ **Problem: "Network Error" when uploading PDFs**
+Your backend is now live at: `https://your-service-name.onrender.com`
 
-## 🔍 **Root Causes:**
-1. **Missing Frontend Environment File** - No `.env` file in frontend folder
-2. **CORS Configuration** - Backend not allowing frontend requests
-3. **File Size Limits** - Mismatch between frontend and backend
-4. **Port Configuration** - Frontend and backend running on different ports
+## 🔧 Frontend Configuration
 
-## ✅ **Solutions Applied (Backend Fixed):**
-- ✅ CORS configuration updated to allow localhost origins
-- ✅ File size limits increased from 10MB to 50MB
-- ✅ Better error handling and logging
-- ✅ Multer configuration updated
+### Step 1: Update Environment Variables
 
-## 🛠️ **Manual Steps Required:**
+Update your frontend's environment variables to point to the deployed backend:
 
-### **Step 1: Create Frontend Environment File**
-
-1. **Navigate to frontend folder:**
-   ```bash
-   cd frontend
+**For Vercel deployment:**
+1. Go to your Vercel dashboard
+2. Navigate to your frontend project
+3. Go to Settings → Environment Variables
+4. Add/Update:
+   ```
+   VITE_API_BASE_URL=https://your-service-name.onrender.com
    ```
 
-2. **Create `.env` file:**
-   ```bash
-   # Windows PowerShell:
-   New-Item -Path ".env" -ItemType File
-   
-   # Or manually create a file named ".env" (with the dot)
-   ```
-
-3. **Add this content to `.env`:**
-   ```env
-   VITE_API_BASE_URL=http://localhost:3001
-   ```
-
-### **Step 2: Verify Backend is Running**
-```bash
-cd backend
-pnpm run dev
+**For local development:**
+Update `frontend/.env`:
+```env
+VITE_API_BASE_URL=https://your-service-name.onrender.com
 ```
 
-**Expected Output:**
-```
-🚀 Server running on port 3001
-📊 Environment: development
-🔗 Health check: http://localhost:3001/health
-✅ Ready check: http://localhost:3001/ready
-```
+### Step 2: Test the Connection
 
-### **Step 3: Test Backend Endpoints**
-```bash
-# Test health endpoint
-curl http://localhost:3001/health
+After updating the environment variables, test that your frontend can connect to the backend:
 
-# Test upload endpoint
-curl -X POST http://localhost:3001/api/upload \
-  -F "file=@test.pdf" \
-  -H "Content-Type: multipart/form-data"
-```
+1. **Health Check**: Visit `https://your-service-name.onrender.com/health`
+2. **Ready Check**: Visit `https://your-service-name.onrender.com/ready`
+3. **API Test**: Visit `https://your-service-name.onrender.com/api/test`
 
-### **Step 4: Start Frontend**
-```bash
-cd frontend
-pnpm run dev
-```
+### Step 3: Deploy Frontend Updates
 
-**Expected Output:**
-```
-VITE v5.4.19 ready in 964 ms
-➜  Local:   http://localhost:5173/
-```
+If you're using Vercel:
+1. The updated `pnpm-lock.yaml` has been pushed
+2. Vercel should automatically redeploy
+3. Check the build logs to ensure success
 
-## 🔧 **Current Configuration:**
+## 🧪 Testing Your Full Application
 
-### **Backend (Port 3001)**
-- ✅ CORS: Allows all localhost origins in development
-- ✅ File Size: 50MB maximum
-- ✅ Health: `/health` endpoint working
-- ✅ Upload: `/api/upload` endpoint working
-- ✅ Chat: `/api/chat` endpoint working
+### 1. File Upload Test
+- Upload a PDF file through the frontend
+- Verify it processes successfully
+- Check that the file appears in your document list
 
-### **Frontend (Port 5173)**
-- ✅ Port: 5173 (configured in vite.config.ts)
-- ✅ API Base: `http://localhost:3001` (after creating .env)
-- ✅ File Size: 50MB maximum
-- ✅ Dependencies: All required packages installed
+### 2. Chat Functionality Test
+- Select a processed document
+- Ask questions about the document
+- Verify AI responses are generated
 
-## 🧪 **Testing Steps:**
+### 3. Error Handling Test
+- Try uploading non-PDF files
+- Test with very large files
+- Verify proper error messages
 
-### **1. Test CORS with Browser**
-Open `backend/test-cors.html` in your browser:
-- Click "Test Health Endpoint"
-- Click "Test Upload Endpoint"
-- Check for any CORS errors
+## 🔍 Troubleshooting
 
-### **2. Test Frontend Integration**
-1. Open `http://localhost:5173` in browser
-2. Try uploading a PDF file
-3. Check browser console for errors
-4. Check Network tab in DevTools
+### Frontend Can't Connect to Backend
+1. **Check CORS**: Ensure your backend's `FRONTEND_URL` environment variable is set correctly
+2. **Verify URL**: Double-check the `VITE_API_BASE_URL` is correct
+3. **Check Network**: Use browser dev tools to see network requests
 
-### **3. Debug Common Issues**
-- **CORS Error**: Check if backend CORS is configured correctly
-- **File Too Large**: Ensure backend file size limits are updated
-- **Network Error**: Verify backend is running and accessible
+### Build Errors
+1. **Lock File**: The `pnpm-lock.yaml` has been updated and pushed
+2. **Dependencies**: All dependencies should be properly resolved
+3. **Environment**: Ensure all environment variables are set
 
-## 🚨 **Troubleshooting:**
+### API Errors
+1. **Check Backend Logs**: Monitor Render.com dashboard for backend errors
+2. **Verify API Keys**: Ensure Pinecone and Gemini API keys are set
+3. **Test Endpoints**: Use the health and test endpoints to verify backend status
 
-### **Issue: "Network Error"**
-**Possible Causes:**
-- Backend not running
-- Wrong port number
-- CORS blocking
-- Firewall/antivirus blocking
+## 📊 Monitoring
 
-**Solutions:**
-1. Check if backend is running: `curl http://localhost:3001/health`
-2. Verify ports: Backend 3001, Frontend 5173
-3. Check CORS configuration
-4. Disable firewall/antivirus temporarily
+### Backend Monitoring (Render.com)
+- Check application logs
+- Monitor resource usage
+- View deployment history
 
-### **Issue: "CORS Error"**
-**Solutions:**
-1. Ensure backend CORS allows localhost origins
-2. Check if frontend origin is in allowed list
-3. Restart backend after CORS changes
+### Frontend Monitoring (Vercel)
+- Check build logs
+- Monitor performance
+- View analytics
 
-### **Issue: "File Too Large"**
-**Solutions:**
-1. Verify backend file size limits are 50MB
-2. Check multer configuration
-3. Restart backend after config changes
+## 🎯 Success Criteria
 
-## 📋 **Complete Checklist:**
+Your full application is working when:
+1. ✅ Frontend builds and deploys successfully on Vercel
+2. ✅ Frontend can connect to backend
+3. ✅ File uploads work correctly
+4. ✅ Chat functionality works properly
+5. ✅ Error handling works as expected
 
-- [ ] Backend running on port 3001
-- [ ] Frontend running on port 5173
-- [ ] Frontend `.env` file created with `VITE_API_BASE_URL=http://localhost:3001`
-- [ ] CORS configuration updated in backend
-- [ ] File size limits increased to 50MB
-- [ ] Backend restarted after changes
-- [ ] Test endpoints working
-- [ ] Frontend upload working without "Network Error"
+## 🚀 Next Steps
 
-## 🎯 **Expected Result:**
-After following these steps, your frontend should be able to:
-- ✅ Upload PDFs up to 50MB
-- ✅ Communicate with backend without CORS errors
-- ✅ Handle file uploads without "Network Error" messages
-- ✅ Process PDFs and chat with documents
+1. **Update your backend URL** in the frontend environment variables
+2. **Redeploy your frontend** (should happen automatically on Vercel)
+3. **Test the full application** end-to-end
+4. **Monitor both services** for any issues
 
-## 🔄 **If Still Having Issues:**
-1. Check browser console for specific error messages
-2. Verify backend is running and accessible
-3. Test with `backend/test-cors.html` file
-4. Check network tab in browser dev tools
-5. Ensure no firewall/antivirus blocking requests
-6. Check if both frontend and backend are using the same network interface
+---
 
-## 📞 **Need Help?**
-If you're still getting errors after following this guide:
-1. Share the specific error message from browser console
-2. Share the network tab details from DevTools
-3. Confirm both services are running on correct ports
-4. Test with the CORS test file first
+**Your PaperMind AI application is now fully deployed and ready to use!** 🎉
