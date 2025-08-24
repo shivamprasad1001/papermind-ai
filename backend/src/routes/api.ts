@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import multer from 'multer';
 import { uploadAndProcessPdf, chatWithDocument } from '../controllers/chatController';
 
@@ -11,6 +11,11 @@ const upload = multer({
     limits: {
         fileSize: 10 * 1024 * 1024, // 10 MB limit
     }
+});
+
+// Debug route to test if API routes are working
+router.get('/test', (req: Request, res: Response) => {
+    res.json({ message: 'API routes are working!', timestamp: new Date().toISOString() });
 });
 
 /**
@@ -71,7 +76,9 @@ const upload = multer({
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/upload', upload.single('file'), uploadAndProcessPdf);
+router.post('/upload', upload.single('file'), (req: Request, res: Response, next: NextFunction) => {
+    uploadAndProcessPdf(req as any, res as any, next);
+});
 
 /**
  * @swagger
@@ -107,7 +114,9 @@ router.post('/upload', upload.single('file'), uploadAndProcessPdf);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/chat', chatWithDocument);
+router.post('/chat', (req: Request, res: Response, next: NextFunction) => {
+    chatWithDocument(req, res, next);
+});
 
 // Define reusable schemas in Swagger components
 /**
