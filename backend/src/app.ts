@@ -1,5 +1,4 @@
 import express, { Request, Response, NextFunction } from "express";
-
 import cors from 'cors';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
@@ -15,7 +14,6 @@ const app = express();
 app.set('trust proxy', true);
 
 // Security, compression, logging
-
 app.use(compression());
 app.use(pinoHttp());
 
@@ -25,7 +23,7 @@ app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 
 // CORS
 app.use(cors({
-  origin: (origin, cb) => {
+  origin: (origin: string | undefined, cb: (err: Error | null, allow?: boolean) => void) => {
     if (!origin) return cb(null, true);
     const allowed = ENV.FRONTEND_URL === '*' || origin === ENV.FRONTEND_URL;
     cb(allowed ? null : new Error('Not allowed by CORS'), allowed);
@@ -47,7 +45,7 @@ app.use(limiter);
 app.use('/api', apiRoutes);
 
 // Health + readiness
-app.get("/api/health", (req, res) => {
+app.get("/api/health", (req: Request, res: Response) => {
   res.json({ status: "ok" });
 });
 app.get('/status', (_req: Request, res: Response) => res.status(200).send('ok'));
@@ -61,13 +59,9 @@ app.use((req: Request, res: Response) => {
   res.status(404).json({ error: 'Not found', path: req.path });
   console.log(req.path);        // should work
   console.log(req.originalUrl); // alternative
-
 });
 
 // Error handler
 app.use(errorHandler);
 
 export default app;
-
-
-
