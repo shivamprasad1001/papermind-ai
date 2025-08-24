@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: papermind-ai-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    rootDir: backend
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: FRONTEND_URL
+        value: https://your-frontend-domain.com
+      - key: MAX_FILE_SIZE
+        value: 52428800
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
+    secretFiles:
+      - key: PINECONE_API_KEY
+        value: your_pinecone_api_key_here
+      - key: PINECONE_INDEX
+        value: your_pinecone_index_name_here
+      - key: GEMINI_API_KEY
+        value: your_gemini_api_key_here
