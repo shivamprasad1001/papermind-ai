@@ -5,12 +5,10 @@
   "main": "dist/src/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc",
-    "start": "node dist/src/server.js",
+    "build": "node -e \"if (require('fs').existsSync('dist')) require('fs').rmSync('dist', { recursive: true, force: true })\" && tsc",
+    "start": "node dist/server.js",
     "test": "node test-endpoints.js",
-    "test:endpoints": "node test-endpoints.js",
-    "clean": "rimraf dist",
-    "prebuild": "npm run clean"
+    "test:endpoints": "node test-endpoints.js"
   },
   "keywords": [
     "ai",
@@ -42,7 +40,6 @@
     "@types/multer": "^1.4.12",
     "@types/node": "^22.10.2",
     "@types/pdf-parse": "^1.1.4",
-    "rimraf": "^6.0.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.2"
   },
