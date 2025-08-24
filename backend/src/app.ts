@@ -42,10 +42,16 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cors({
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
+    if (!origin) {
+      console.log('CORS: Allowing request with no origin');
+      return callback(null, true);
+    }
+    
+    console.log(`CORS: Request from origin: ${origin}`);
     
     // Always allow localhost origins for development
     if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+      console.log('CORS: Allowing localhost origin');
       return callback(null, true);
     }
     
@@ -54,9 +60,11 @@ app.use(cors({
     const isAllowed = allowedOrigins.includes('*') || allowedOrigins.includes(origin);
     
     if (isAllowed) {
+      console.log('CORS: Allowing origin');
       callback(null, true);
     } else {
       console.log(`CORS blocked origin: ${origin}`);
+      console.log(`Allowed origins: ${JSON.stringify(allowedOrigins)}`);
       callback(new Error('Not allowed by CORS'), false);
     }
   },

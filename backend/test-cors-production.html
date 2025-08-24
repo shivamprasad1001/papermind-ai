@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS Test - Production Backend</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        button { margin: 10px; padding: 10px 20px; }
+        #results { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>CORS Test - Production Backend</h1>
+    <p>Testing connection to: <strong id="backend-url">https://papermind-ai-backend-89x0.onrender.com</strong></p>
+    
+    <button onclick="testHealth()">Test Health Endpoint</button>
+    <button onclick="testReady()">Test Ready Endpoint</button>
+    <button onclick="testUpload()">Test Upload Endpoint (GET)</button>
+    <button onclick="testCORS()">Test CORS Preflight</button>
+    
+    <div id="results"></div>
+
+    <script>
+        const backendUrl = 'https://papermind-ai-backend-89x0.onrender.com';
+        
+        function log(message, isError = false) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = isError ? 'error' : 'success';
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            results.appendChild(div);
+        }
+
+        async function testHealth() {
+            try {
+                log('Testing health endpoint...');
+                const response = await fetch(`${backendUrl}/health`);
+                const data = await response.json();
+                log(`Health check successful: ${JSON.stringify(data)}`);
+            } catch (error) {
+                log(`Health check failed: ${error.message}`, true);
+            }
+        }
+
+        async function testReady() {
+            try {
+                log('Testing ready endpoint...');
+                const response = await fetch(`${backendUrl}/ready`);
+                const data = await response.json();
+                log(`Ready check successful: ${JSON.stringify(data)}`);
+            } catch (error) {
+                log(`Ready check failed: ${error.message}`, true);
+            }
+        }
+
+        async function testUpload() {
+            try {
+                log('Testing upload endpoint (GET request)...');
+                const response = await fetch(`${backendUrl}/api/upload`, {
+                    method: 'GET'
+                });
+                const data = await response.json();
+                log(`Upload endpoint test successful: ${JSON.stringify(data)}`);
+            } catch (error) {
+                log(`Upload endpoint test failed: ${error.message}`, true);
+            }
+        }
+
+        async function testCORS() {
+            try {
+                log('Testing CORS preflight...');
+                const response = await fetch(`${backendUrl}/api/upload`, {
+                    method: 'OPTIONS',
+                    headers: {
+                        'Origin': window.location.origin,
+                        'Access-Control-Request-Method': 'POST',
+                        'Access-Control-Request-Headers': 'Content-Type'
+                    }
+                });
+                log(`CORS preflight successful: Status ${response.status}`);
+                log(`CORS headers: ${JSON.stringify(Object.fromEntries(response.headers.entries()))}`);
+            } catch (error) {
+                log(`CORS preflight failed: ${error.message}`, true);
+            }
+        }
+    </script>
+</body>
+</html>
