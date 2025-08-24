@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CORS Test</title>
+</head>
+<body>
+    <h1>CORS Test for PaperMind AI</h1>
+    <button onclick="testHealth()">Test Health Endpoint</button>
+    <button onclick="testUpload()">Test Upload Endpoint</button>
+    <div id="results"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001';
+        
+        function log(message) {
+            document.getElementById('results').innerHTML += '<p>' + message + '</p>';
+        }
+        
+        async function testHealth() {
+            try {
+                log('Testing health endpoint...');
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                log('✅ Health: ' + JSON.stringify(data));
+            } catch (error) {
+                log('❌ Health Error: ' + error.message);
+            }
+        }
+        
+        async function testUpload() {
+            try {
+                log('Testing upload endpoint...');
+                const formData = new FormData();
+                const blob = new Blob(['Test PDF content'], { type: 'application/pdf' });
+                formData.append('file', blob, 'test.pdf');
+                
+                const response = await fetch(`${API_BASE}/api/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log('✅ Upload: ' + JSON.stringify(data));
+                } else {
+                    const error = await response.text();
+                    log('❌ Upload Error: ' + response.status + ' - ' + error);
+                }
+            } catch (error) {
+                log('❌ Upload Network Error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

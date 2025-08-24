@@ -1,8 +1,10 @@
-import app from './app';
 import dotenv from 'dotenv';
+import path from 'path';
 
-// Load environment variables
-dotenv.config();
+// Load environment variables from .env file
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
+
+import app from './app';
 
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {

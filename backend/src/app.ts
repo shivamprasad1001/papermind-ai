@@ -1,11 +1,11 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction, Application } from "express";
 import cors from 'cors';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import apiRoutes from './routes/api'; 
 
-const app = express();
+const app: Application = express();
 
 // Environment configuration
 const ENV = {
@@ -13,8 +13,11 @@ const ENV = {
   NODE_ENV: process.env.NODE_ENV || 'development'
 };
 
-// Trust proxy for production deployments
-app.set('trust proxy', true);
+// Trust proxy for production deployments (only when behind a real proxy)
+if (ENV.NODE_ENV === 'production') {
+  // Only trust proxy when actually behind a proxy, not in development
+  app.set('trust proxy', 'loopback');
+}
 
 // Security middleware
 app.use(helmet({
@@ -32,14 +35,21 @@ app.use(helmet({
 app.use(compression());
 
 // Body parsing with reasonable limits
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // CORS configuration
 app.use(cors({
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
+    
+    // In development, allow all localhost origins
+    if (ENV.NODE_ENV === 'development') {
+      if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+        return callback(null, true);
+      }
+    }
     
     // Allow requests from your frontend domain
     const allowedOrigins = ENV.FRONTEND_URL === '*' ? ['*'] : [ENV.FRONTEND_URL];
@@ -48,29 +58,38 @@ app.use(cors({
     if (isAllowed) {
       callback(null, true);
     } else {
+      console.log(`CORS blocked origin: ${origin}`);
       callback(new Error('Not allowed by CORS'), false);
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Content-Length', 'Content-Type']
 }));
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: {
-    error: 'Too many requests from this IP, please try again later.',
-    retryAfter: '15 minutes'
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-  skipSuccessfulRequests: false,
-  skipFailedRequests: false
-});
+// Rate limiting (configured to work with trust proxy)
+if (ENV.NODE_ENV === 'production') {
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: {
+      error: 'Too many requests from this IP, please try again later.',
+      retryAfter: '15 minutes'
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+    skipSuccessfulRequests: false,
+    skipFailedRequests: false,
+    // Configure rate limiting to work with trust proxy
+    keyGenerator: (req) => {
+      // Use X-Forwarded-For header if available, otherwise use IP
+      return req.headers['x-forwarded-for'] as string || req.ip || req.socket.remoteAddress || 'unknown';
+    }
+  });
 
-app.use('/api/', limiter);
+  app.use('/api/', limiter);
+}
 
 // Health check endpoints
 app.get('/health', (req: Request, res: Response) => {

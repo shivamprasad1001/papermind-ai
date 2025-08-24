@@ -4,10 +4,11 @@
   "description": "Backend for PaperMind AI v2",
   "main": "dist/src/server.js",
   "scripts": {
-    "dev": "ts-node-dev -r dotenv/config --respawn --transpile-only src/server.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "start": "node dist/src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test-endpoints.js",
+    "test:endpoints": "node test-endpoints.js"
   },
   "dependencies": {
     "@google/genai": "^0.15.0",

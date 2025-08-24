@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
+import path from 'path';
 
-// Load environment variables
-dotenv.config();
+// Load environment variables from .env file
+dotenv.config({ path: path.join(__dirname, '..', '..', '.env') });
 
 export const ENV = {
   NODE_ENV: process.env.NODE_ENV || 'development',
@@ -18,7 +19,7 @@ export const ENV = {
   GEMINI_API_KEY: process.env.GEMINI_API_KEY,
   
   // File Upload Limits
-  MAX_FILE_SIZE: parseInt(process.env.MAX_FILE_SIZE || '10485760', 10), // 10MB default
+  MAX_FILE_SIZE: parseInt(process.env.MAX_FILE_SIZE || '52428800', 10), // 50MB default
   
   // Rate Limiting
   RATE_LIMIT_WINDOW_MS: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10), // 15 minutes

@@ -1,15 +1,15 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response, NextFunction, Router } from 'express';
 import multer from 'multer';
 import { uploadAndProcessPdf, chatWithDocument } from '../controllers/chatController';
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Configure multer for file uploads
 const storage = multer.memoryStorage();
 const upload = multer({ 
     storage: storage,
     limits: {
-        fileSize: 10 * 1024 * 1024, // 10 MB limit
+        fileSize: 50 * 1024 * 1024, // 50 MB limit
     }
 });
 
