@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .upload-area { border: 2px dashed #ccc; padding: 20px; margin: 20px 0; }
+        .success { color: green; }
+        .error { color: red; }
+        #results { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>File Upload Test</h1>
+    <p>Testing upload to: <strong>https://papermind-ai-backend-89x0.onrender.com</strong></p>
+    
+    <div class="upload-area">
+        <input type="file" id="fileInput" accept=".pdf" />
+        <button onclick="uploadFile()">Upload File</button>
+    </div>
+    
+    <div id="results"></div>
+
+    <script>
+        const backendUrl = 'https://papermind-ai-backend-89x0.onrender.com';
+        
+        function log(message, isError = false) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = isError ? 'error' : 'success';
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            results.appendChild(div);
+        }
+
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                log('Please select a file first', true);
+                return;
+            }
+            
+            if (!file.name.toLowerCase().endsWith('.pdf')) {
+                log('Please select a PDF file', true);
+                return;
+            }
+            
+            log(`Uploading file: ${file.name} (${file.size} bytes)`);
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const response = await fetch(`${backendUrl}/api/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                log(`Response status: ${response.status}`);
+                log(`Response headers: ${JSON.stringify(Object.fromEntries(response.headers.entries()))}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`Upload successful: ${JSON.stringify(data)}`);
+                } else {
+                    const errorText = await response.text();
+                    log(`Upload failed: ${errorText}`, true);
+                }
+            } catch (error) {
+                log(`Upload error: ${error.message}`, true);
+                console.error('Full error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
