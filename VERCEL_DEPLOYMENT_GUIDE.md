@@ -98,8 +98,20 @@ Add these as secret files:
 
 ### 3. Fixed TypeScript Type Definitions
 - **Problem**: Type definitions in `devDependencies` not available during production builds
-- **Solution**: Moved `@types/express` and `@types/node` to `dependencies`
+- **Solution**: Moved all essential type definitions to `dependencies`:
+  - `@types/express`
+  - `@types/node`
+  - `@types/cors`
+  - `@types/compression`
+  - `@types/multer`
 - **Result**: TypeScript compilation now works in production environments
+
+### 4. Fixed Express.Multer Type Issues
+- **Problem**: `Express.Multer.File` type not available in production builds
+- **Solution**: Created custom `MulterFile` interface in both:
+  - `src/controllers/chatController.ts`
+  - `src/types/express-overrides.d.ts`
+- **Result**: All multer-related type errors resolved
 
 ### 4. Updated TypeScript Configuration
 - Proper output directory structure
@@ -135,6 +147,16 @@ curl https://your-service-name.onrender.com/api/test
 **Solution**: 
 - Ensure `@types/express` and `@types/node` are in `dependencies` (not `devDependencies`)
 - Check that `tsconfig.json` doesn't have explicit `types` array that conflicts with dependencies
+
+**Error**: `Cannot find a declaration file for module 'cors'`, `'compression'`, or `'multer'`
+**Solution**:
+- Move all `@types/*` packages to `dependencies` in `package.json`
+- Ensure these are available during production builds
+
+**Error**: `Namespace 'Express' has no exported member 'Multer'`
+**Solution**:
+- Create custom `MulterFile` interface instead of using `Express.Multer.File`
+- Update type definitions in controller and express-overrides files
 
 ### Runtime Errors
 1. Check environment variables are set correctly
