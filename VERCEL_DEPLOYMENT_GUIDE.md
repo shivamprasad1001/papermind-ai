@@ -96,7 +96,12 @@ Add these as secret files:
 }
 ```
 
-### 3. Updated TypeScript Configuration
+### 3. Fixed TypeScript Type Definitions
+- **Problem**: Type definitions in `devDependencies` not available during production builds
+- **Solution**: Moved `@types/express` and `@types/node` to `dependencies`
+- **Result**: TypeScript compilation now works in production environments
+
+### 4. Updated TypeScript Configuration
 - Proper output directory structure
 - Cross-platform compatibility
 - Production-ready compilation settings
@@ -124,6 +129,12 @@ curl https://your-service-name.onrender.com/api/test
 1. Check Render.com build logs
 2. Verify all dependencies are in `package.json`
 3. Ensure TypeScript compilation succeeds locally
+
+### TypeScript Type Definition Errors
+**Error**: `Cannot find type definition file for 'express'` or `Cannot find type definition file for 'node'`
+**Solution**: 
+- Ensure `@types/express` and `@types/node` are in `dependencies` (not `devDependencies`)
+- Check that `tsconfig.json` doesn't have explicit `types` array that conflicts with dependencies
 
 ### Runtime Errors
 1. Check environment variables are set correctly
