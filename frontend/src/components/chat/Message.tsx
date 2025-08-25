@@ -25,7 +25,7 @@ const Message = ({ message }: MessageProps) => {
 
       <div className={`${baseMessageClasses} ${isUser ? userMessageClasses : aiMessageClasses}`}>
         {isUser ? (
-          <p className="text-sm whitespace-pre-wrap ">{message.text}</p>
+          <p className="text-sm whitespace-pre-wrap ">{message.response.text}</p>
         ) : (
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {message.text}
