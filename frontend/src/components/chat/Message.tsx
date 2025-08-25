@@ -28,7 +28,7 @@ const Message = ({ message }: MessageProps) => {
           <p className="text-sm whitespace-pre-wrap ">{message.response}</p>
         ) : (
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {message.text}
+            {message.response}
           </ReactMarkdown>
         )}
       </div>
