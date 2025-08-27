@@ -12,8 +12,8 @@ const Message = ({ message }: MessageProps) => {
   const isUser = message.sender === 'user';
 
   const baseMessageClasses = "max-w-xl lg:max-w-3xl px-4 py-3 rounded-2xl prose prose-sm prose-invert dark:prose-invert max-w-none";
-  const userMessageClasses = "bg-[var(--userMessage)] text-white self-end rounded-br-lg border border-[var(--userMessage-border)]";
-  const aiMessageClasses = "bg-[var(--aiMessage)]  text-gray-200 self-start rounded-bl-lg  border border-[var(--aiMessage-border)] backdrop-blur-lg";
+  const userMessageClasses = "bg-[var(--userMessage)] text-[var(--text)] self-end rounded-br-lg border border-[var(--userMessage-border)]";
+  const aiMessageClasses = "bg-[var(--aiMessage)]  text-[var(--text)] self-start rounded-bl-lg  border border-[var(--aiMessage-border)] backdrop-blur-lg";
 
   return (
     <div className={`flex items-start gap-3 w-full ${isUser ? 'justify-end' : 'justify-start'}`}>
