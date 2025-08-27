@@ -3,6 +3,8 @@ import FileUpload from './FileUpload';
 import DocumentList from './DocumentList';
 import { BrainCircuitIcon } from '../common/icons';
 import ThemeSwitcher from '../common/ThemeSwitcher';
+import HelpButton from '../common/HelpButton';
+
 
 const Sidebar = () => {
   return (
@@ -21,6 +23,7 @@ const Sidebar = () => {
 
       <div className="flex items-center justify-between text-xs text-[var(--text-secondary)] flex-shrink-0">
         <span>v2.1.0</span>
+        <HelpButton />
         <ThemeSwitcher />
       </div>
     </div>
