@@ -22,6 +22,8 @@ html, body {
   --border-button: #3B82F6;
   --aiMessage : #1E1E1E;
   --aiMessage-border : #2D2D2D;
+  --text: #ffffff;
+
 }
 
 /* Dark Theme (Default) */
@@ -42,6 +44,8 @@ html, body {
   --aiMessage-border : #2D2D2D;
   --userMessage : #308de9;
   --userMessage-border : #1c80e5;
+  --text: #ffffff;
+
 }
 
 /* Light Theme */
@@ -62,6 +66,7 @@ html, body {
   --aiMessage-border : #E9ECEF;
   --userMessage : #FFFFFF;
   --userMessage-border : #FFFFFF;
+  --text: #000000;
 }
 
 /* Blue Theme */
@@ -82,6 +87,7 @@ html, body {
   --aiMessage-border : #334155;
   --userMessage : #334155;
   --userMessage-border : #1E293B;
+  --text: #ffffff;
 }
 
 /* Green Theme */
@@ -102,6 +108,7 @@ html, body {
   --aiMessage-border : #047857;
   --userMessage : #047857 ;
   --userMessage-border : #35937a;
+  --text: #ffffff;
 }
 
 /* Purple Theme */
@@ -120,6 +127,7 @@ html, body {
   --border-button: #8B5CF6;
   --aiMessage : #312E81;
   --aiMessage-border : #4338CA;
+  --text: #ffffff;
 }
 
 /* Orange Theme */
@@ -138,6 +146,7 @@ html, body {
   --border-button: #F97316;
   --aiMessage : #7C2D12;
   --aiMessage-border : #EA580C;
+  --text: #ffffff;
 }
 
 /* Custom scrollbar for webkit browsers */
