@@ -100,13 +100,28 @@ export const useChat = () => {
     try {
         console.log('Sending message with userType:', state.userType);
         await apiService.streamChatResponse({
-            message: text,
-            documentId: activeDocumentId,
-            userType: state.userType,
-            onChunk: (chunk) => {
-                dispatch({ type: 'APPEND_AI_RESPONSE', payload: { id: aiMessageId, chunk } });
-            },
-        });
+    message: text,
+    documentId: activeDocumentId,
+    userType: state.userType,
+    onChunk: (chunk) => {
+        try {
+            // Parse JSON if chunk is string
+            const parsed = typeof chunk === "string" ? JSON.parse(chunk) : chunk;
+
+            // Only take response field
+            const aiResponse = parsed.response || "";
+
+            if (aiResponse) {
+                dispatch({
+                    type: 'APPEND_AI_RESPONSE',
+                    payload: { id: aiMessageId, chunk: aiResponse }
+                });
+            }
+        } catch (e) {
+            console.error("Failed to parse AI response chunk:", e, chunk);
+        }
+    },
+});
     } catch (err) {
        const errorMessage = err instanceof Error ? err.message : 'Failed to get AI response';
        dispatch({ type: 'SET_ERROR', payload: errorMessage });
