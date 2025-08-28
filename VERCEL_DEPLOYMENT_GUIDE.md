@@ -1,45 +1,4 @@
-# Vercel Deployment Guide for PaperMind AI Backend
-
-## ⚠️ Important: Vercel Limitations
-
-**Vercel is NOT suitable for this backend application** due to the following limitations:
-
-### 1. File Upload Limitations
-- Vercel serverless functions have a **10MB payload limit**
-- Our backend supports **50MB file uploads** for PDF processing
-- `multer` middleware for file uploads doesn't work in serverless environments
-
-### 2. Streaming Response Issues
-- Vercel serverless functions have **10-second timeout limits**
-- Chat responses require longer processing times
-- Streaming responses are not supported in serverless environments
-
-### 3. Memory and Processing Constraints
-- Limited memory allocation for serverless functions
-- PDF processing and AI operations require more resources
-- Pinecone vector operations need persistent connections
-
-## ✅ Recommended Deployment Platforms
-
-### 1. Render.com (Recommended)
-- **Free tier available**
-- Supports persistent Node.js servers
-- No file size limitations
-- Supports streaming responses
-- Easy environment variable management
-
-### 2. Railway.app
-- **Free tier available**
-- Excellent for Node.js applications
-- Automatic deployments from GitHub
-- Built-in environment variable management
-
-### 3. DigitalOcean App Platform
-- **Paid service** but very reliable
-- Excellent performance and scalability
-- Full control over server configuration
-
-## 🚀 Render.com Deployment Steps
+# Render.com Deployment Guide for PaperMind AI Backend
 
 ### Step 1: Prepare Your Repository
 1. Ensure all changes are committed and pushed to GitHub
@@ -51,11 +10,11 @@
 2. Click "New +" and select "Web Service"
 3. Connect your GitHub repository
 4. Configure the service:
-   - **Name**: `papermind-ai-backend`
+   - **Name**: `papermindAI-backend`
    - **Root Directory**: `backend`
    - **Environment**: `Node`
-   - **Build Command**: `npm install && npm run build`
-   - **Start Command**: `npm start`
+   - **Build Command**: `pnpm install && pnpm run build`
+   - **Start Command**: `pnpm dev`
 
 ### Step 3: Set Environment Variables
 Add these environment variables in Render.com dashboard:
