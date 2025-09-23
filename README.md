@@ -11,7 +11,7 @@ A modern PDF document chat application powered by AI that allows you to upload P
   
 <img src="https://img.shields.io/badge/Powered%20By-LangChain-blueviolet?style=for-the-badge&logo=LangChain&logoColor=white" />
 <img src="https://img.shields.io/badge/Vector%20Store-FAISS-blue?style=for-the-badge" />
-<img src="https://img.shields.io/badge/Frontend-HTML/CSS/JS-orange?style=for-the-badge" />
+<img src="https://img.shields.io/badge/Frontend-React/TypeScript-orange?style=for-the-badge&logo=react&logoColor=61DAFB" />
 <img src="https://img.shields.io/badge/Backend-FastAPI-teal?style=for-the-badge&logo=fastapi" />
 <img src="https://img.shields.io/badge/License-MIT-informational?style=for-the-badge" />
 <img src="https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python" />
