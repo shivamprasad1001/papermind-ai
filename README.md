@@ -3,7 +3,6 @@
 
 A modern PDF document chat application powered by AI that allows you to upload PDF documents and have intelligent conversations about their content.
 
----
 <p align="center">
   <img src="assets/PapermindAI.png" alt="PaperMind AI" />
 </p>
@@ -25,7 +24,6 @@ A modern PDF document chat application powered by AI that allows you to upload P
 <img src="https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" />
 <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
 
----
 ## Features
 
 - **PDF Upload & Processing**: Upload PDF documents and extract text content
