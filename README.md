@@ -19,13 +19,13 @@ A modern PDF document chat application powered by AI that allows you to upload P
 ---
 ## Features
 
-- 📄 **PDF Upload & Processing**: Upload PDF documents and extract text content
-- 🤖 **AI-Powered Chat**: Chat with your documents using Google's Gemini AI
-- 🔍 **Smart Context Retrieval**: Uses Pinecone vector database for relevant context
-- 💬 **Real-time Streaming**: Get AI responses in real-time with streaming
-- 📱 **Responsive Design**: Modern, responsive UI that works on all devices
-- 🎨 **Document Preview**: Preview uploaded documents in a side panel
-- 🔄 **Chat History**: Maintains conversation history for each document
+- **PDF Upload & Processing**: Upload PDF documents and extract text content
+- **AI-Powered Chat**: Chat with your documents using Google's Gemini AI
+- **Smart Context Retrieval**: Uses Pinecone vector database for relevant context
+- **Real-time Streaming**: Get AI responses in real-time with streaming
+- **Responsive Design**: Modern, responsive UI that works on all devices
+- **Document Preview**: Preview uploaded documents in a side panel
+- **Chat History**: Maintains conversation history for each document
 
 ## Tech Stack
 
