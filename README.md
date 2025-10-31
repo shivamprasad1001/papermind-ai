@@ -3,15 +3,36 @@
 
 A modern PDF document chat application powered by AI that allows you to upload PDF documents and have intelligent conversations about their content.
 
+<p align="center">
+  <img src="assets/PapermindAI.png" alt="PaperMind AI" />
+</p>
+<p align= 'center'>
+  
+<img src="https://img.shields.io/badge/Powered%20By-LangChain-blueviolet?style=for-the-badge&logo=LangChain&logoColor=white" />
+<img src="https://img.shields.io/badge/Vector%20Store-FAISS-blue?style=for-the-badge" />
+<img src="https://img.shields.io/badge/Frontend-React/TypeScript-orange?style=for-the-badge&logo=react&logoColor=61DAFB" />
+<img src="https://img.shields.io/badge/Backend-FastAPI-teal?style=for-the-badge&logo=fastapi" />
+<img src="https://img.shields.io/badge/License-MIT-informational?style=for-the-badge" />
+<img src="https://img.shields.io/badge/Container-Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
+<img src="https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python" />
+<img src="https://img.shields.io/badge/Runtime-Node.js-green?style=for-the-badge&logo=node.js&logoColor=339933" />
+<img src="https://img.shields.io/badge/Package%20Manager-npm-CB3837?style=for-the-badge&logo=npm&logoColor=white" />
+<img src="https://img.shields.io/badge/Shell-Bash-4EAA25?style=for-the-badge&logo=gnu-bash&logoColor=white" />
+<img src="https://img.shields.io/badge/Deploy-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white" />
+<img src="https://img.shields.io/badge/Deploy-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" />
+<img src="https://img.shields.io/badge/License-MIT-informational?style=for-the-badge" />
+<img src="https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" />
+<img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+
 ## Features
 
-- 📄 **PDF Upload & Processing**: Upload PDF documents and extract text content
-- 🤖 **AI-Powered Chat**: Chat with your documents using Google's Gemini AI
-- 🔍 **Smart Context Retrieval**: Uses Pinecone vector database for relevant context
-- 💬 **Real-time Streaming**: Get AI responses in real-time with streaming
-- 📱 **Responsive Design**: Modern, responsive UI that works on all devices
-- 🎨 **Document Preview**: Preview uploaded documents in a side panel
-- 🔄 **Chat History**: Maintains conversation history for each document
+- **PDF Upload & Processing**: Upload PDF documents and extract text content
+- **AI-Powered Chat**: Chat with your documents using Google's Gemini AI
+- **Smart Context Retrieval**: Uses Pinecone vector database for relevant context
+- **Real-time Streaming**: Get AI responses in real-time with streaming
+- **Responsive Design**: Modern, responsive UI that works on all devices
+- **Document Preview**: Preview uploaded documents in a side panel
+- **Chat History**: Maintains conversation history for each document
 
 ## Tech Stack
 
