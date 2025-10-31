@@ -1,32 +1,123 @@
-html, body {
-  width: 100%;
-  overflow-x: auto; /* or scroll if you prefer */
-}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Theme CSS Variables */
-:root {
-  --bg-primary: #121212;
-  --bg-surface: #1E1E1E;
-  --bg-border: #2D2D2D;
-  --text-primary: #FFFFFF;
-  --text-secondary: #CCCCCC;
-  --bg-sidebar: #1E1E1E;
-  --bg-header: #2D2D2D;
-  --bg-input: #2D2D2D;
-  --bg-button: #3B82F6;
-  --bg-button-hover: #2563EB;
-  --border-input: #444444;
-  --border-button: #3B82F6;
-  --aiMessage : #1E1E1E;
-  --aiMessage-border : #2D2D2D;
-  --text: #ffffff;
-
+/* Reset and layout adjustments */
+html, body {
+  width: 100%;
+  overflow-x: auto; /* or scroll if you prefer */
 }
 
-/* Dark Theme (Default) */
+/* Liquid Glass Effect Styles */
+@layer components {
+  .glass {
+    @apply backdrop-blur-md bg-white/10 border border-white/20 shadow-lg;
+  }
+
+  .glass-dark {
+    @apply backdrop-blur-md bg-black/30 border border-white/10 shadow-lg;
+  }
+
+  .glass-sidebar {
+    @apply backdrop-blur-xl bg-black/40 border-r border-white/10 shadow-xl;
+  }
+
+  .glass-panel {
+    @apply backdrop-blur-lg bg-white/5 border border-white/10 rounded-xl shadow-xl;
+  }
+
+  .glass-input {
+    @apply backdrop-blur-sm bg-white/5 border border-white/20 focus:border-white/30 focus:ring-1 focus:ring-white/30 shadow-inner;
+  }
+
+  /* Message bubble glass styling */
+  .glass-message {
+    @apply border rounded-2xl shadow-lg backdrop-blur-md;
+  }
+
+  .liquid-hover {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .liquid-hover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+      circle at var(--x, 50%) var(--y, 50%),
+      rgba(255, 255, 255, 0.2) 0%,
+      transparent 50%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .liquid-hover:hover::before {
+    opacity: 1;
+  }
+
+  .liquid-active {
+    position: relative;
+  }
+
+  .liquid-active::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at var(--x, 50%) var(--y, 50%),
+      rgba(255, 255, 255, 0.4) 0%,
+      transparent 60%
+    );
+    opacity: 1;
+    z-index: 0;
+    pointer-events: none;
+  }
+}
+
+/* Liquid Animation Keyframes */
+@keyframes liquidBorder {
+  0%, 100% {
+    border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+  }
+  25% {
+    border-radius: 40% 60% 70% 30%/30% 40% 60% 70%;
+  }
+  50% {
+    border-radius: 30% 60% 70% 40%/50% 60% 30% 60%;
+  }
+  75% {
+    border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+  }
+}
+
+.liquid-border {
+  animation: liquidBorder 8s ease-in-out infinite;
+}
+
+/* Theme Variables */
+:root {
+  --text-primary: #212529;
+  --text-secondary: #6C757D;
+  --bg-sidebar: #F8F9FA;
+  --bg-header: #FFFFFF;
+  --bg-input: #FFFFFF;
+  --border-color: #DEE2E6;
+  --accent-color: #0D6EFD;
+  /* ----------------- */
+  
+}
+
+
+
+/* Dark Theme */
 .theme-dark {
   --bg-primary: #121212;
   --bg-surface: #1E1E1E;
@@ -40,12 +131,11 @@ html, body {
   --bg-button-hover: #2563EB;
   --border-input: #444444;
   --border-button: #3B82F6;
-  --aiMessage : #1E1E1E;
-  --aiMessage-border : #2D2D2D;
-  --userMessage : #308de9;
-  --userMessage-border : #1c80e5;
+  --aiMessage: #1E1E1E;
+  --aiMessage-border: #2D2D2D;
+  --userMessage: #308de9;
+  --userMessage-border: #1c80e5;
   --text: #ffffff;
-
 }
 
 /* Light Theme */
@@ -62,31 +152,31 @@ html, body {
   --bg-button-hover: #0B5ED7;
   --border-input: #CED4DA;
   --border-button: #0D6EFD;
-  --aiMessage : #fff;
-  --aiMessage-border : #E9ECEF;
-  --userMessage : #FFFFFF;
-  --userMessage-border : #FFFFFF;
+  --aiMessage: #FFFFFF;
+  --aiMessage-border: #E9ECEF;
+  --userMessage: #0D6EFD;
+  --userMessage-border: #0B5ED7;
   --text: #000000;
 }
 
 /* Blue Theme */
 .theme-blue {
-  --bg-primary: #18202d;
-  --bg-surface: #1E293B;
-  --bg-border: #334155;
-  --text-primary: #F1F5F9;
-  --text-secondary: #CBD5E1;
-  --bg-sidebar: #1E293B;
-  --bg-header: #334155;
+  --bg-primary: #F8F9FA;
+  --bg-surface: #dddfe0;
+  --bg-border: #E9ECEF;
+  --text-primary: #212529;
+  --text-secondary: #6C757D;
+  --bg-sidebar: #F8F9FA;
+  --bg-header: #FFFFFF;
   --bg-input: #334155;
   --bg-button: #3B82F6;
   --bg-button-hover: #2563EB;
   --border-input: #475569;
   --border-button: #3B82F6;
-  --aiMessage : #1E293B;
-  --aiMessage-border : #334155;
-  --userMessage : #334155;
-  --userMessage-border : #1E293B;
+  --aiMessage: #1E293B;
+  --aiMessage-border: #334155;
+  --userMessage: #3B82F6;
+  --userMessage-border: #2563EB;
   --text: #ffffff;
 }
 
@@ -104,10 +194,10 @@ html, body {
   --bg-button-hover: #059669;
   --border-input: #059669;
   --border-button: #10B981;
-  --aiMessage : #065F46;
-  --aiMessage-border : #047857;
-  --userMessage : #047857 ;
-  --userMessage-border : #35937a;
+  --aiMessage: #065F46;
+  --aiMessage-border: #047857;
+  --userMessage: #10B981;
+  --userMessage-border: #059669;
   --text: #ffffff;
 }
 
@@ -125,8 +215,10 @@ html, body {
   --bg-button-hover: #7C3AED;
   --border-input: #6366F1;
   --border-button: #8B5CF6;
-  --aiMessage : #312E81;
-  --aiMessage-border : #4338CA;
+  --aiMessage: #312E81;
+  --aiMessage-border: #4338CA;
+  --userMessage: #8B5CF6;
+  --userMessage-border: #7C3AED;
   --text: #ffffff;
 }
 
@@ -144,12 +236,14 @@ html, body {
   --bg-button-hover: #EA580C;
   --border-input: #FB923C;
   --border-button: #F97316;
-  --aiMessage : #7C2D12;
-  --aiMessage-border : #EA580C;
+  --aiMessage: #7C2D12;
+  --aiMessage-border: #EA580C;
+  --userMessage: #F97316;
+  --userMessage-border: #EA580C;
   --text: #ffffff;
 }
 
-/* Custom scrollbar for webkit browsers */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -168,7 +262,7 @@ html, body {
   background: var(--text-secondary);
 }
 
-/* Smooth theme transitions */
+/* Transitions */
 * {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, backdrop-filter 0.3s ease;
 }

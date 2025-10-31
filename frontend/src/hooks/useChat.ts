@@ -3,7 +3,7 @@ import { useAppContext } from '../context/AppContext';
 import * as apiService from '../services/apiService';
 import { storeFile, getFile } from '../services/fileStoreService';
 import { MAX_FILE_SIZE_BYTES } from '../constants';
-import type { Document } from '../types';
+import type { Document, HighlightInfo } from '../types';
 
 export const useChat = () => {
   const { state, dispatch } = useAppContext();
@@ -85,10 +85,6 @@ export const useChat = () => {
   }, [dispatch, state.previewingDocument]);
 
   const sendMessage = useCallback(async (text: string) => {
-    if (!activeDocumentId) {
-      showToast('Please select a document before chatting.', 'error');
-      return;
-    }
     if (!text.trim()) return;
 
     const userMessage = { id: Date.now().toString(), text, sender: 'user' as const };
@@ -98,49 +94,88 @@ export const useChat = () => {
     dispatch({ type: 'START_AI_RESPONSE', payload: { id: aiMessageId } });
 
     try {
-        console.log('Sending message with userType:', state.userType);
-        await apiService.streamChatResponse({
-    message: text,
-    documentId: activeDocumentId,
-    userType: state.userType,
-    onChunk: (chunk) => {
-        try {
-            // Parse JSON if chunk is string
-            const parsed = typeof chunk === "string" ? JSON.parse(chunk) : chunk;
-
-            // Only take response field
-            const aiResponse = parsed.response || "";
-
-            if (aiResponse) {
-                dispatch({
-                    type: 'APPEND_AI_RESPONSE',
-                    payload: { id: aiMessageId, chunk: aiResponse }
-                });
-            }
-        } catch (e) {
-            console.error("Failed to parse AI response chunk:", e, chunk);
+      if (state.mode === 'pdf') {
+        if (!activeDocumentId) {
+          showToast('Please select or upload a PDF before chatting.', 'error');
+          return;
         }
-    },
-});
+        const chatResponse = await apiService.streamChatResponse({
+          message: text,
+          documentId: activeDocumentId,
+          userType: state.userType,
+          onChunk: (chunk) => {
+            dispatch({ type: 'APPEND_AI_RESPONSE', payload: { id: aiMessageId, chunk } });
+          },
+        });
+        
+        // Add sources to the message if available
+        if (chatResponse.sources && chatResponse.sources.length > 0) {
+          dispatch({ 
+            type: 'ADD_SOURCES_TO_MESSAGE', 
+            payload: { 
+              messageId: aiMessageId, 
+              sources: chatResponse.sources 
+            } 
+          });
+        }
+      } else if (state.mode === 'general') {
+        const reply = `General chat: You said "${text}"`;
+        dispatch({ type: 'APPEND_AI_RESPONSE', payload: { id: aiMessageId, chunk: reply } });
+      } else if (state.mode === 'youtube') {
+        if (!state.youtubeUrl) {
+          showToast('Please paste a YouTube URL first.', 'error');
+          return;
+        }
+        const reply = `YouTube (${state.youtubeUrl}): Received your message "${text}". (Analysis coming soon)`;
+        dispatch({ type: 'APPEND_AI_RESPONSE', payload: { id: aiMessageId, chunk: reply } });
+      } else if (state.mode === 'site') {
+        if (!state.siteUrl) {
+          showToast('Please enter a Website URL first.', 'error');
+          return;
+        }
+        const reply = `Website (${state.siteUrl}): Received your message "${text}". (Analysis coming soon)`;
+        dispatch({ type: 'APPEND_AI_RESPONSE', payload: { id: aiMessageId, chunk: reply } });
+      }
     } catch (err) {
-       const errorMessage = err instanceof Error ? err.message : 'Failed to get AI response';
-       dispatch({ type: 'SET_ERROR', payload: errorMessage });
-       showToast(errorMessage, 'error');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to get AI response';
+      dispatch({ type: 'SET_ERROR', payload: errorMessage });
+      showToast(errorMessage, 'error');
     } finally {
       dispatch({ type: 'FINISH_AI_RESPONSE' });
     }
-  }, [activeDocumentId, dispatch, showToast, state.userType]);
+  }, [activeDocumentId, dispatch, showToast, state.mode, state.siteUrl, state.userType, state.youtubeUrl]);
   
-  const showPreview = useCallback((doc: Document) => {
+  const showPreview = useCallback((docOrId: Document | string, highlightInfo?: HighlightInfo) => {
+    let doc: Document;
+    
+    if (typeof docOrId === 'string') {
+      // Find document by ID
+      const foundDoc = state.documents.find((d: Document) => d.id === docOrId);
+      if (!foundDoc) {
+        showToast("Document not found", 'error');
+        return;
+      }
+      doc = foundDoc;
+    } else {
+      doc = docOrId;
+    }
+    
     const file = getFile(doc.id);
     if (file) {
       // Create a temporary URL for the file blob to show in the preview
       const fileUrl = URL.createObjectURL(file);
-      dispatch({ type: 'SHOW_PREVIEW', payload: { ...doc, fileUrl } });
+      dispatch({ 
+        type: 'SHOW_PREVIEW', 
+        payload: { 
+          ...doc, 
+          fileUrl,
+          highlightInfo 
+        } 
+      });
     } else {
       showToast("Could not find the file to preview. Please try re-uploading.", 'error');
     }
-  }, [dispatch, showToast]);
+  }, [dispatch, showToast, state.documents]);
   
   const hidePreview = useCallback(() => {
     const { previewingDocument } = state;

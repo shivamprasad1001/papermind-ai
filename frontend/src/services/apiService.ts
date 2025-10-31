@@ -24,6 +24,25 @@ export const uploadPdf = async (file: File, onProgress?: (progress: number) => v
   return response.data;
 };
 
+interface ChatResponse {
+  success: boolean;
+  response: string;
+  sources?: Array<{
+    id: string;
+    documentId: string;
+    documentName: string;
+    pageNumber: number;
+    excerpt: string;
+    confidence: number;
+    startIndex?: number;
+    endIndex?: number;
+  }>;
+  documentId: string;
+  userType: string;
+  contextLength: number;
+  timestamp: string;
+}
+
 interface StreamChatParams {
   message: string;
   documentId: string;
@@ -31,7 +50,7 @@ interface StreamChatParams {
   onChunk: (chunk: string) => void;
 }
 
-export const streamChatResponse = async ({ message, documentId, userType = 'general', onChunk }: StreamChatParams): Promise<void> => {
+export const streamChatResponse = async ({ message, documentId, userType = 'general', onChunk }: StreamChatParams): Promise<ChatResponse> => {
     const response = await fetch(`${API_BASE_URL}/api/chat`, {
         method: 'POST',
         headers: {
@@ -41,26 +60,14 @@ export const streamChatResponse = async ({ message, documentId, userType = 'gene
     });
 
     if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'Failed to fetch stream' }));
+        const errorData = await response.json().catch(() => ({ message: 'Failed to fetch response' }));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
     }
 
-    const reader = response.body?.getReader();
-    if (!reader) {
-        throw new Error('Failed to get readable stream.');
-    }
-
-    const decoder = new TextDecoder();
-    try {
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) {
-                break;
-            }
-            const chunk = decoder.decode(value, { stream: true });
-            onChunk(chunk);
-        }
-    } finally {
-        reader.releaseLock();
-    }
+    const data: ChatResponse = await response.json();
+    
+    // Simulate streaming by calling onChunk with the full response
+    onChunk(data.response);
+    
+    return data;
 };
