@@ -170,6 +170,18 @@ export const chatWithDocument = async (req: Request, res: Response, next: NextFu
 
         const context = contextChunks.map(chunk => chunk.metadata?.text || '').filter(Boolean).join('\n\n');
         
+        // Prepare sources information
+        const sources = contextChunks.map((chunk, index) => ({
+            id: `source-${Date.now()}-${index}`,
+            documentId: documentId,
+            documentName: chunk.metadata?.filename || 'Document',
+            pageNumber: chunk.metadata?.page || 1,
+            excerpt: chunk.metadata?.text?.substring(0, 200) + (chunk.metadata?.text?.length > 200 ? '...' : '') || '',
+            confidence: chunk.score || 0.8, // Use Pinecone similarity score as confidence
+            startIndex: 0, // Could be enhanced with actual text positions
+            endIndex: chunk.metadata?.text?.length || 0
+        })).filter(source => source.excerpt.length > 0);
+        
         // Check if we have relevant context
         if (!context || context.trim().length === 0) {
             console.log('No relevant context found');
@@ -211,6 +223,7 @@ export const chatWithDocument = async (req: Request, res: Response, next: NextFu
         res.json({
             success: true,
             response: fullResponse,
+            sources: sources,
             documentId: documentId,
             userType: validatedUserType,
             contextLength: context.length,
