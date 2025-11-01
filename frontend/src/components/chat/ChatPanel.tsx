@@ -52,15 +52,23 @@ const ChatPanel = () => {
       )}
 
       {/* Main Content Area - Scrollable */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto scroll-smooth">
         {/* Show Welcome Screen when only greeting message exists */}
         {shouldShowWelcome ? (
-          <WelcomeScreen mode={state.mode} hasDocument={!!activeDocument} />
+          <div className="animate-fade-in">
+            <WelcomeScreen mode={state.mode} hasDocument={!!activeDocument} />
+          </div>
         ) : (
           <div className="max-w-3xl mx-auto px-4">
             <div className="space-y-6 py-6">
-              {messages.map((msg) => (
-                <Message key={msg.id} message={msg} />
+              {messages.map((msg, index) => (
+                <div 
+                  key={msg.id} 
+                  className="animate-fade-in"
+                  style={{ animationDelay: `${Math.min(index * 50, 200)}ms` }}
+                >
+                  <Message message={msg} />
+                </div>
               ))}
               {isStreaming && <TypingIndicator />}
               <div ref={messagesEndRef} />

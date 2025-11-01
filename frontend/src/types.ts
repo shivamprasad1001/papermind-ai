@@ -57,6 +57,7 @@ export interface AppState {
   previewingDocument: Document | null; 
   messages: Message[];
   messagesByMode?: Record<ChatMode, Message[]>;
+  messagesByDocument?: Record<string, Message[]>; // Store chat history per document ID
   isLoading: boolean; // For file uploads
   isStreaming: boolean; // For chat responses
   uploadProgress: UploadProgress | null;

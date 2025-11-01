@@ -25,8 +25,25 @@ type Action =
   | { type: 'SET_YOUTUBE_URL'; payload: string | null }
   | { type: 'SET_SITE_URL'; payload: string | null };
 
+// Load persisted state from localStorage
+const loadPersistedState = (): Partial<AppState> => {
+  try {
+    const documents = localStorage.getItem('papermind-documents');
+    const messagesByDocument = localStorage.getItem('papermind-messages-by-document');
+    return {
+      documents: documents ? JSON.parse(documents) : [],
+      messagesByDocument: messagesByDocument ? JSON.parse(messagesByDocument) : {},
+    };
+  } catch (error) {
+    console.error('Failed to load persisted state:', error);
+    return {};
+  }
+};
+
+const persistedState = loadPersistedState();
+
 const initialState: AppState = {
-  documents: [],
+  documents: persistedState.documents || [],
   activeDocumentId: null,
   previewingDocument: null,
   messages: [GREETING_MESSAGES.pdf],
@@ -36,6 +53,7 @@ const initialState: AppState = {
     youtube: [GREETING_MESSAGES.youtube],
     site: [GREETING_MESSAGES.site],
   },
+  messagesByDocument: persistedState.messagesByDocument || {},
   isLoading: false,
   isStreaming: false,
   uploadProgress: null,
@@ -61,60 +79,110 @@ const appReducer = (state: AppState, action: Action): AppState => {
         return state;
       }
       return { ...state, documents: [...state.documents, action.payload] };
-    case 'SET_ACTIVE_DOCUMENT':
-      // If switching to a new document, clear messages. If deselecting, show greeting.
-      const newMessages = action.payload ? [] : [GREETING_MESSAGES.pdf];
+    case 'SET_ACTIVE_DOCUMENT': {
+      const newDocId = action.payload;
+      const previousDocId = state.activeDocumentId;
+      const messagesByDoc = state.messagesByDocument || {};
+      
+      // Save current messages to the previous document's history (if in PDF mode and has active doc)
+      if (state.mode === 'pdf' && previousDocId && state.messages.length > 0) {
+        messagesByDoc[previousDocId] = state.messages;
+      }
+      
+      // Load messages for the new document, or show greeting if no document selected
+      let newMessages: Message[];
+      if (!newDocId) {
+        newMessages = [GREETING_MESSAGES.pdf];
+      } else {
+        // Load saved messages for this document, or start with empty array
+        newMessages = messagesByDoc[newDocId] || [];
+      }
+      
       return { 
         ...state, 
-        activeDocumentId: action.payload,
+        activeDocumentId: newDocId,
         messages: newMessages,
+        messagesByDocument: messagesByDoc,
         error: null 
       };
+    }
     case 'ADD_USER_MESSAGE': {
       const mode = state.mode;
       const byMode = state.messagesByMode || { pdf: [], general: [], youtube: [], site: [] };
       const updated = { ...byMode, [mode]: [...(byMode[mode] || []), action.payload] } as AppState['messagesByMode'];
-      return { ...state, messages: [...state.messages, action.payload], messagesByMode: updated };
+      const newMessages = [...state.messages, action.payload];
+      
+      // Also update messagesByDocument if in PDF mode with active document
+      const messagesByDoc = state.messagesByDocument || {};
+      if (mode === 'pdf' && state.activeDocumentId) {
+        messagesByDoc[state.activeDocumentId] = newMessages;
+      }
+      
+      return { ...state, messages: newMessages, messagesByMode: updated, messagesByDocument: messagesByDoc };
     }
-    case 'START_AI_RESPONSE':
-      {
-        const aiMsg = { id: action.payload.id, text: '', sender: 'ai' as const };
-        const mode = state.mode;
-        const byMode = state.messagesByMode || { pdf: [], general: [], youtube: [], site: [] };
-        const updated = { ...byMode, [mode]: [...(byMode[mode] || []), aiMsg] } as AppState['messagesByMode'];
-        return {
-          ...state,
-          isStreaming: true,
-          messages: [...state.messages, aiMsg],
-          messagesByMode: updated,
-        };
+    case 'START_AI_RESPONSE': {
+      const aiMsg = { id: action.payload.id, text: '', sender: 'ai' as const };
+      const mode = state.mode;
+      const byMode = state.messagesByMode || { pdf: [], general: [], youtube: [], site: [] };
+      const updated = { ...byMode, [mode]: [...(byMode[mode] || []), aiMsg] } as AppState['messagesByMode'];
+      const newMessages = [...state.messages, aiMsg];
+      
+      // Also update messagesByDocument if in PDF mode with active document
+      const messagesByDoc = state.messagesByDocument || {};
+      if (mode === 'pdf' && state.activeDocumentId) {
+        messagesByDoc[state.activeDocumentId] = newMessages;
       }
-    case 'APPEND_AI_RESPONSE':
-      {
-        const mode = state.mode;
-        const byMode = state.messagesByMode || { pdf: [], general: [], youtube: [], site: [] };
-        const updatedCurrent = (byMode[mode] || []).map(msg =>
-          msg.id === action.payload.id ? { ...msg, text: msg.text + action.payload.chunk } : msg
-        );
-        return {
-          ...state,
-          messages: state.messages.map(msg => (msg.id === action.payload.id ? { ...msg, text: msg.text + action.payload.chunk } : msg)),
-          messagesByMode: { ...byMode, [mode]: updatedCurrent } as AppState['messagesByMode'],
-        };
+      
+      return {
+        ...state,
+        isStreaming: true,
+        messages: newMessages,
+        messagesByMode: updated,
+        messagesByDocument: messagesByDoc,
+      };
+    }
+    case 'APPEND_AI_RESPONSE': {
+      const mode = state.mode;
+      const byMode = state.messagesByMode || { pdf: [], general: [], youtube: [], site: [] };
+      const updatedCurrent = (byMode[mode] || []).map(msg =>
+        msg.id === action.payload.id ? { ...msg, text: msg.text + action.payload.chunk } : msg
+      );
+      const newMessages = state.messages.map(msg => (msg.id === action.payload.id ? { ...msg, text: msg.text + action.payload.chunk } : msg));
+      
+      // Also update messagesByDocument if in PDF mode with active document
+      const messagesByDoc = state.messagesByDocument || {};
+      if (mode === 'pdf' && state.activeDocumentId) {
+        messagesByDoc[state.activeDocumentId] = newMessages;
       }
-    case 'ADD_SOURCES_TO_MESSAGE':
-      {
-        const mode = state.mode;
-        const byMode = state.messagesByMode || { pdf: [], general: [], youtube: [], site: [] };
-        const updatedCurrent = (byMode[mode] || []).map(msg =>
-          msg.id === action.payload.messageId ? { ...msg, sources: action.payload.sources } : msg
-        );
-        return {
-          ...state,
-          messages: state.messages.map(msg => (msg.id === action.payload.messageId ? { ...msg, sources: action.payload.sources } : msg)),
-          messagesByMode: { ...byMode, [mode]: updatedCurrent } as AppState['messagesByMode'],
-        };
+      
+      return {
+        ...state,
+        messages: newMessages,
+        messagesByMode: { ...byMode, [mode]: updatedCurrent } as AppState['messagesByMode'],
+        messagesByDocument: messagesByDoc,
+      };
+    }
+    case 'ADD_SOURCES_TO_MESSAGE': {
+      const mode = state.mode;
+      const byMode = state.messagesByMode || { pdf: [], general: [], youtube: [], site: [] };
+      const updatedCurrent = (byMode[mode] || []).map(msg =>
+        msg.id === action.payload.messageId ? { ...msg, sources: action.payload.sources } : msg
+      );
+      const newMessages = state.messages.map(msg => (msg.id === action.payload.messageId ? { ...msg, sources: action.payload.sources } : msg));
+      
+      // Also update messagesByDocument if in PDF mode with active document
+      const messagesByDoc = state.messagesByDocument || {};
+      if (mode === 'pdf' && state.activeDocumentId) {
+        messagesByDoc[state.activeDocumentId] = newMessages;
       }
+      
+      return {
+        ...state,
+        messages: newMessages,
+        messagesByMode: { ...byMode, [mode]: updatedCurrent } as AppState['messagesByMode'],
+        messagesByDocument: messagesByDoc,
+      };
+    }
     case 'FINISH_AI_RESPONSE':
       return { ...state, isStreaming: false };
     case 'SET_LOADING':
@@ -182,6 +250,26 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       dispatch({ type: 'SET_THEME', payload: savedTheme });
     }
   }, []);
+
+  // Persist documents to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('papermind-documents', JSON.stringify(state.documents));
+    } catch (error) {
+      console.error('Failed to persist documents:', error);
+    }
+  }, [state.documents]);
+
+  // Persist chat history per document to localStorage
+  useEffect(() => {
+    try {
+      if (state.messagesByDocument) {
+        localStorage.setItem('papermind-messages-by-document', JSON.stringify(state.messagesByDocument));
+      }
+    } catch (error) {
+      console.error('Failed to persist messages by document:', error);
+    }
+  }, [state.messagesByDocument]);
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>
