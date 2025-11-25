@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction, Router } from 'express';
 import multer from 'multer';
-import { uploadAndProcessPdf, chatWithDocument } from '../controllers/chatController';
+import { uploadAndProcessPdf, chatWithDocument, generalChat } from '../controllers/chatController';
 
 const router: Router = express.Router();
 
@@ -36,6 +36,16 @@ router.post('/upload', upload.single('file'), (req: Request, res: Response, next
  */
 router.post('/chat', (req: Request, res: Response, next: NextFunction) => {
     chatWithDocument(req, res, next);
+});
+
+/**
+ * General chat (no document required)
+ * POST /api/chat/general
+ * Content-Type: application/json
+ * Body: { message: string, sessionId: string, userType?: string }
+ */
+router.post('/chat/general', (req: Request, res: Response, next: NextFunction) => {
+    generalChat(req, res, next);
 });
 
 export default router;

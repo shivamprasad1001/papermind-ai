@@ -29,10 +29,10 @@ const ChatPanel = () => {
 
   return (
     <div className="flex flex-col h-screen max-h-screen bg-[var(--bg-primary)] relative">
-      {/* Coming Soon Overlay for non-PDF modes */}
+      {/* Coming Soon Overlay for non-PDF modes (hidden for general chat) */}
       <ComingSoonOverlay 
         mode={state.mode} 
-        isVisible={state.mode !== 'pdf'} 
+        isVisible={state.mode !== 'pdf' && state.mode !== 'general'} 
       />
       {/* URL Prompts - Fixed at top when needed */}
       {!shouldShowWelcome && state.mode === 'youtube' && !state.youtubeUrl && (

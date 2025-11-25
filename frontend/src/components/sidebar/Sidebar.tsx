@@ -66,7 +66,15 @@ const Sidebar = () => {
             return (
               <button
                 key={mode.key}
-                onClick={() => dispatch({ type: 'SET_MODE', payload: mode.key as any })}
+                onClick={() => {
+                  dispatch({ type: 'SET_MODE', payload: mode.key as any });
+                  try {
+                    const url = `/${mode.key}`;
+                    if (window.location.pathname !== url) {
+                      window.history.pushState({}, '', url);
+                    }
+                  } catch (e) {}
+                }}
                 className={`w-full p-3 rounded-lg text-left transition-all duration-200 group relative overflow-hidden
                   ${isActive
                     ? 'bg-[var(--bg-button)] text-white shadow-md'

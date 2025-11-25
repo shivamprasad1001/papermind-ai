@@ -119,8 +119,20 @@ export const useChat = () => {
           });
         }
       } else if (state.mode === 'general') {
-        const reply = `General chat: You said "${text}"`;
-        dispatch({ type: 'APPEND_AI_RESPONSE', payload: { id: aiMessageId, chunk: reply } });
+        // Use the actual general chat endpoint for AI responses
+        const sessionId = localStorage.getItem('papermind-session-id') || `session-${Date.now()}`;
+        if (!localStorage.getItem('papermind-session-id')) {
+          localStorage.setItem('papermind-session-id', sessionId);
+        }
+        
+        const chatResponse = await apiService.generalChatResponse({
+          message: text,
+          sessionId: sessionId,
+          userType: state.userType,
+          onChunk: (chunk) => {
+            dispatch({ type: 'APPEND_AI_RESPONSE', payload: { id: aiMessageId, chunk } });
+          },
+        });
       } else if (state.mode === 'youtube') {
         if (!state.youtubeUrl) {
           showToast('Please paste a YouTube URL first.', 'error');

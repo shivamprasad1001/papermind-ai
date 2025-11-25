@@ -5,6 +5,7 @@ import { upsertToPinecone, queryPinecone } from '../services/pineconeService';
 import { getChatCompletion } from '../services/geminiService';
 import { initPinecone } from '../services/pineconeService';
 import { addMessageToHistory, getHistory } from '../services/chatHistoryService';
+import { generateGeneralChatResponse } from '../services/generalChatService';
 
 // Type definitions
 interface MulterFile {
@@ -258,6 +259,63 @@ export const chatWithDocument = async (req: Request, res: Response, next: NextFu
                 error: 'Chat failed during processing.',
                 message: 'An error occurred while generating the response.'
             });
+        }
+    }
+};
+
+/**
+ * Handle general chat (no document context required)
+ * POST /api/chat/general
+ */
+export const generalChat = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { message, sessionId, userType = 'general' } = req.body;
+
+    // Validate required fields
+    if (!message || !sessionId) {
+        res.status(400).json({
+            error: 'Missing required fields.',
+            message: 'Message and sessionId are required.'
+        });
+        return;
+    }
+
+    // Validate user type
+    const validUserTypes = ['student', 'teacher', 'researcher', 'general'];
+    const validatedUserType = validUserTypes.includes(userType) ? userType : 'general';
+
+    try {
+        console.log(`Starting general chat for session: ${sessionId}, message: ${message}`);
+
+        // Generate response without document context
+        const response = await generateGeneralChatResponse(message, sessionId, validatedUserType);
+
+        // Send response
+        res.json({
+            success: true,
+            response: response,
+            sessionId: sessionId,
+            userType: validatedUserType,
+            timestamp: new Date().toISOString()
+        });
+
+    } catch (error) {
+        console.error('Error in general chat:', error);
+
+        if (!res.headersSent) {
+            if (error instanceof Error) {
+                res.status(500).json({
+                    error: 'Chat failed.',
+                    message: 'Failed to process your message. Please try again.',
+                    details: process.env.NODE_ENV === 'development' ? error.message : undefined,
+                    timestamp: new Date().toISOString()
+                });
+            } else {
+                res.status(500).json({
+                    error: 'Chat failed.',
+                    message: 'An unexpected error occurred while processing your message.',
+                    timestamp: new Date().toISOString()
+                });
+            }
         }
     }
 };

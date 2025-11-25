@@ -20,7 +20,15 @@ const NavBar: React.FC = () => {
           return (
             <li key={key}>
               <button
-                onClick={() => dispatch({ type: 'SET_MODE', payload: key })}
+                onClick={() => {
+                  dispatch({ type: 'SET_MODE', payload: key });
+                  try {
+                    const url = `/${key}`;
+                    if (window.location.pathname !== url) {
+                      window.history.pushState({}, '', url);
+                    }
+                  } catch (e) {}
+                }}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors
                   ${isActive
                     ? 'bg-[var(--bg-button)] text-white'

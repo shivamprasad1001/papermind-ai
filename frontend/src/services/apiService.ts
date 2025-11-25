@@ -43,9 +43,24 @@ interface ChatResponse {
   timestamp: string;
 }
 
+interface GeneralChatResponse {
+  success: boolean;
+  response: string;
+  sessionId: string;
+  userType: string;
+  timestamp: string;
+}
+
 interface StreamChatParams {
   message: string;
   documentId: string;
+  userType?: 'student' | 'teacher' | 'researcher' | 'general';
+  onChunk: (chunk: string) => void;
+}
+
+interface GeneralChatParams {
+  message: string;
+  sessionId: string;
   userType?: 'student' | 'teacher' | 'researcher' | 'general';
   onChunk: (chunk: string) => void;
 }
@@ -67,6 +82,31 @@ export const streamChatResponse = async ({ message, documentId, userType = 'gene
     const data: ChatResponse = await response.json();
     
     // Simulate streaming by calling onChunk with the full response
+    onChunk(data.response);
+    
+    return data;
+};
+
+/**
+ * Send a message for general chat (no document context)
+ */
+export const generalChatResponse = async ({ message, sessionId, userType = 'general', onChunk }: GeneralChatParams): Promise<GeneralChatResponse> => {
+    const response = await fetch(`${API_BASE_URL}/api/chat/general`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message, sessionId, userType }),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Failed to fetch response' }));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+    }
+
+    const data: GeneralChatResponse = await response.json();
+    
+    // Call onChunk with the response text
     onChunk(data.response);
     
     return data;

@@ -243,6 +243,32 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('papermind-theme', state.theme);
   }, [state.theme]);
 
+  // Sync initial mode with URL path and respond to browser navigation
+  // Supported routes: /general, /pdf, /youtube, /site
+  const SUPPORTED_MODES = new Set(['general', 'pdf', 'youtube', 'site']);
+
+  useEffect(() => {
+    try {
+      const seg = window.location.pathname.split('/').filter(Boolean)[0];
+      if (seg && SUPPORTED_MODES.has(seg) && seg !== state.mode) {
+        dispatch({ type: 'SET_MODE', payload: seg as any });
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    const onPop = () => {
+      try {
+        const seg = window.location.pathname.split('/').filter(Boolean)[0];
+        if (seg && SUPPORTED_MODES.has(seg) && seg !== state.mode) {
+          dispatch({ type: 'SET_MODE', payload: seg as any });
+        }
+      } catch (e) {}
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [state.mode]);
+
   // Load theme from localStorage on mount
   useEffect(() => {
     const savedTheme = localStorage.getItem('papermind-theme') as Theme;
@@ -277,6 +303,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     </AppContext.Provider>
   );
 };
+
+// Sync initial mode with URL path and respond to browser navigation
+// Supported routes: /general, /pdf, /youtube, /site
+const SUPPORTED_MODES = new Set(['general', 'pdf', 'youtube', 'site']);
+
+// NOTE: AppProviderWithRouting was removed — routing sync merged into AppProvider above.
 
 export const useAppContext = () => {
   const context = useContext(AppContext);
