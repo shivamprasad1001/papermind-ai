@@ -64,7 +64,7 @@ A modern PDF document chat application powered by AI that allows you to upload P
 ### 1. Clone and Install Dependencies
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/shivamprasad1001/papermind-ai
 cd papermind-ai-v2
 pnpm install
 ```
